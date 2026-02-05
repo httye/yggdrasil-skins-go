@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"yggdrasil-api-go/src/yggdrasil"
+	"github.com/httye/yggdrasil-skins-go/src/yggdrasil"
 )
 
 // SessionCache 内存Session缓存
@@ -33,8 +33,7 @@ func (c *SessionCache) Store(serverID string, session *yggdrasil.Session) error 
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	// Session固定过期时间为120秒
-	expiresAt := time.Now().Add(120 * time.Second)
+	// Session固定过期时间�?20�?	expiresAt := time.Now().Add(120 * time.Second)
 
 	c.sessions[serverID] = &sessionEntry{
 		Session:   session,
@@ -54,8 +53,7 @@ func (c *SessionCache) Get(serverID string) (*yggdrasil.Session, error) {
 		return nil, fmt.Errorf("session not found")
 	}
 
-	// 检查是否过期
-	if time.Now().After(entry.ExpiresAt) {
+	// 检查是否过�?	if time.Now().After(entry.ExpiresAt) {
 		return nil, fmt.Errorf("session expired")
 	}
 

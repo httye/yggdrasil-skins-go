@@ -1,17 +1,15 @@
-// Package middleware 提供HTTP中间件
-package middleware
+// Package middleware 提供HTTP中间�?package middleware
 
 import (
 	"net/http"
 	"strings"
 
-	"yggdrasil-api-go/src/utils"
+	"github.com/httye/yggdrasil-skins-go/src/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
-// CheckContentType 检查请求内容类型的中间件
-func CheckContentType() gin.HandlerFunc {
+// CheckContentType 检查请求内容类型的中间�?func CheckContentType() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 只对POST、PUT、PATCH请求检查Content-Type
 		if c.Request.Method == http.MethodPost ||

@@ -11,9 +11,9 @@ import (
 	"sync"
 	"time"
 
-	"yggdrasil-api-go/src/config"
-	storage "yggdrasil-api-go/src/storage/interface"
-	"yggdrasil-api-go/src/yggdrasil"
+	"github.com/httye/yggdrasil-skins-go/src/config"
+	storage "github.com/httye/yggdrasil-skins-go/src/storage/interface"
+	"github.com/httye/yggdrasil-skins-go/src/yggdrasil"
 
 	"github.com/bytedance/sonic"
 )
@@ -22,8 +22,7 @@ import (
 type Storage struct {
 	dataDir       string                // 数据目录
 	textureConfig *config.TextureConfig // 材质配置
-	mu            sync.RWMutex          // 读写锁
-
+	mu            sync.RWMutex          // 读写�?
 	// 数据文件（仿照BlessingSkin表结构）
 	users    map[string]*FileUser    // 用户数据 (users.json)
 	players  map[string]*FilePlayer  // 角色数据 (players.json)
@@ -71,8 +70,7 @@ type FileTexture struct {
 
 // convertFileUserToYggdrasilUser 将FileUser转换为yggdrasil.User
 func (s *Storage) convertFileUserToYggdrasilUser(fileUser *FileUser) (*yggdrasil.User, error) {
-	// 获取用户的角色
-	var profiles []yggdrasil.Profile
+	// 获取用户的角�?	var profiles []yggdrasil.Profile
 	for _, player := range s.players {
 		if player.UID == fileUser.UID {
 			profiles = append(profiles, yggdrasil.Profile{
@@ -106,8 +104,7 @@ func (s *Storage) convertYggdrasilUserToFileUser(user *yggdrasil.User) (*FileUse
 		Nickname:   user.Email, // 默认使用邮箱作为昵称
 		Score:      1000,       // 默认积分
 		Permission: 0,          // 默认权限
-		Verified:   true,       // 默认已验证
-		RegisterAt: time.Now().Format("2006-01-02 15:04:05"),
+		Verified:   true,       // 默认已验�?		RegisterAt: time.Now().Format("2006-01-02 15:04:05"),
 		LastSignAt: time.Now().Format("2006-01-02 15:04:05"),
 	}, nil
 }
@@ -128,21 +125,18 @@ func NewStorage(options map[string]any, textureConfig *config.TextureConfig) (*S
 		userProfiles:  make(map[string][]string),
 	}
 
-	// 创建必要的目录
-	if err := storage.initDirectories(); err != nil {
+	// 创建必要的目�?	if err := storage.initDirectories(); err != nil {
 		return nil, fmt.Errorf("failed to initialize directories: %w", err)
 	}
 
-	// 加载数据到缓存
-	if err := storage.loadData(); err != nil {
+	// 加载数据到缓�?	if err := storage.loadData(); err != nil {
 		return nil, fmt.Errorf("failed to load data: %w", err)
 	}
 
 	return storage, nil
 }
 
-// initDirectories 初始化目录结构
-func (s *Storage) initDirectories() error {
+// initDirectories 初始化目录结�?func (s *Storage) initDirectories() error {
 	dirs := []string{
 		s.dataDir,
 		filepath.Join(s.dataDir, "textures", "skins"),
@@ -158,8 +152,7 @@ func (s *Storage) initDirectories() error {
 	return nil
 }
 
-// loadData 加载数据到缓存
-func (s *Storage) loadData() error {
+// loadData 加载数据到缓�?func (s *Storage) loadData() error {
 	// 加载用户数据
 	if err := s.loadUsers(); err != nil {
 		return err
@@ -197,8 +190,7 @@ func (s *Storage) loadTexturesData() error {
 		return err
 	}
 
-	// 加载到缓存
-	for _, texture := range textures {
+	// 加载到缓�?	for _, texture := range textures {
 		s.textures[texture.Hash] = texture
 	}
 
@@ -232,8 +224,7 @@ func (s *Storage) getHashPath(baseDir, key, extension string) string {
 	hash := sha256.Sum256([]byte(key))
 	hashStr := hex.EncodeToString(hash[:])
 
-	// 两级分桶：前2个字符/后2个字符/完整哈希.扩展名
-	level1 := hashStr[:2]
+	// 两级分桶：前2个字�?�?个字�?完整哈希.扩展�?	level1 := hashStr[:2]
 	level2 := hashStr[2:4]
 	filename := hashStr + extension
 
@@ -252,8 +243,7 @@ func (s *Storage) Close() error {
 	return nil
 }
 
-// Ping 检查存储连接
-func (s *Storage) Ping() error {
+// Ping 检查存储连�?func (s *Storage) Ping() error {
 	// 检查数据目录是否可访问
 	_, err := os.Stat(s.dataDir)
 	return err
@@ -269,8 +259,7 @@ func (s *Storage) GetUserByUUID(uuid string) (*yggdrasil.User, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
-	// 先通过UUID找到对应的角色
-	var targetPlayer *FilePlayer
+	// 先通过UUID找到对应的角�?	var targetPlayer *FilePlayer
 	for _, player := range s.players {
 		if player.UUID == uuid {
 			targetPlayer = player
@@ -282,8 +271,7 @@ func (s *Storage) GetUserByUUID(uuid string) (*yggdrasil.User, error) {
 		return nil, fmt.Errorf("player not found")
 	}
 
-	// 通过角色的UID找到对应的用户
-	for _, user := range s.users {
+	// 通过角色的UID找到对应的用�?	for _, user := range s.users {
 		if user.UID == targetPlayer.UID {
 			return s.convertFileUserToYggdrasilUser(user)
 		}
@@ -323,8 +311,7 @@ func (s *Storage) GetUserProfiles(userUUID string) ([]*yggdrasil.Profile, error)
 		return nil, fmt.Errorf("player not found")
 	}
 
-	// 获取该用户的所有角色
-	var profiles []*yggdrasil.Profile
+	// 获取该用户的所有角�?	var profiles []*yggdrasil.Profile
 	for _, player := range s.players {
 		if player.UID == targetUID {
 			profiles = append(profiles, &yggdrasil.Profile{
@@ -338,8 +325,7 @@ func (s *Storage) GetUserProfiles(userUUID string) ([]*yggdrasil.Profile, error)
 	return profiles, nil
 }
 
-// GetPlayerTextures 获取角色的所有材质
-func (s *Storage) GetPlayerTextures(playerUUID string) (map[storage.TextureType]*storage.TextureInfo, error) {
+// GetPlayerTextures 获取角色的所有材�?func (s *Storage) GetPlayerTextures(playerUUID string) (map[storage.TextureType]*storage.TextureInfo, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
@@ -348,8 +334,7 @@ func (s *Storage) GetPlayerTextures(playerUUID string) (map[storage.TextureType]
 	// 查找角色
 	player, exists := s.players[playerUUID]
 	if !exists {
-		return textures, nil // 角色不存在，返回空材质
-	}
+		return textures, nil // 角色不存在，返回空材�?	}
 
 	// 获取皮肤材质
 	if player.SkinTID > 0 {
@@ -390,8 +375,7 @@ func (s *Storage) GetPlayerTextures(playerUUID string) (map[storage.TextureType]
 	return textures, nil
 }
 
-// parseTime 解析时间字符串
-func parseTime(timeStr string) time.Time {
+// parseTime 解析时间字符�?func parseTime(timeStr string) time.Time {
 	if t, err := time.Parse("2006-01-02 15:04:05", timeStr); err == nil {
 		return t
 	}

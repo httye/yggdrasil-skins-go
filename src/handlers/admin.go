@@ -7,20 +7,18 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"github.com/NewNanCity/YggdrasilGo/src/models"
-	"github.com/NewNanCity/YggdrasilGo/src/services"
-	"github.com/NewNanCity/YggdrasilGo/src/utils"
+	"github.com/httye/yggdrasil-skins-go/src/models"
+	"github.com/httye/yggdrasil-skins-go/src/services"
+	"github.com/httye/yggdrasil-skins-go/src/utils"
 )
 
-// AdminHandler 后台管理处理器
-type AdminHandler struct {
+// AdminHandler 后台管理处理�?type AdminHandler struct {
 	db              *gorm.DB
 	userBanService  *services.UserBanService
 	profileService  *services.ProfileLimitService
 }
 
-// NewAdminHandler 创建后台管理处理器
-func NewAdminHandler(db *gorm.DB) *AdminHandler {
+// NewAdminHandler 创建后台管理处理�?func NewAdminHandler(db *gorm.DB) *AdminHandler {
 	return &AdminHandler{
 		db:              db,
 		userBanService:  services.NewUserBanService(db),
@@ -47,8 +45,7 @@ func (h *AdminHandler) GetUsers(c *gin.Context) {
 		query = query.Where("username LIKE ? OR email LIKE ?", "%"+search+"%", "%"+search+"%")
 	}
 
-	// 应用筛选条件
-	if isBanned != "" {
+	// 应用筛选条�?	if isBanned != "" {
 		banned := isBanned == "true"
 		query = query.Where("is_banned = ?", banned)
 	}
@@ -80,8 +77,7 @@ func (h *AdminHandler) GetUsers(c *gin.Context) {
 		return
 	}
 
-	// 计算总页数
-	totalPages := int(total) / pageSize
+	// 计算总页�?	totalPages := int(total) / pageSize
 	if int(total)%pageSize > 0 {
 		totalPages++
 	}
@@ -244,8 +240,7 @@ func (h *AdminHandler) UpdateUserMaxProfiles(c *gin.Context) {
 	})
 }
 
-// GetUserProfiles 获取用户的角色列表
-func (h *AdminHandler) GetUserProfiles(c *gin.Context) {
+// GetUserProfiles 获取用户的角色列�?func (h *AdminHandler) GetUserProfiles(c *gin.Context) {
 	userUUID := c.Param("id")
 
 	profiles, err := h.profileService.GetUserProfiles(userUUID)
@@ -260,8 +255,7 @@ func (h *AdminHandler) GetUserProfiles(c *gin.Context) {
 	})
 }
 
-// GetUserLogs 获取用户的操作日志
-func (h *AdminHandler) GetUserLogs(c *gin.Context) {
+// GetUserLogs 获取用户的操作日�?func (h *AdminHandler) GetUserLogs(c *gin.Context) {
 	userUUID := c.Param("id")
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "50"))
 
@@ -288,13 +282,11 @@ func (h *AdminHandler) GetStatistics(c *gin.Context) {
 	c.JSON(http.StatusOK, stats)
 }
 
-// GetBannedUsers 获取被封禁用户列表
-func (h *AdminHandler) GetBannedUsers(c *gin.Context) {
+// GetBannedUsers 获取被封禁用户列�?func (h *AdminHandler) GetBannedUsers(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	pageSize, _ := strconv.Atoi(c.DefaultQuery("page_size", "20"))
 
-	// 计算偏移量
-	offset := (page - 1) * pageSize
+	// 计算偏移�?	offset := (page - 1) * pageSize
 
 	users, total, err := h.userBanService.GetBannedUsers(pageSize, offset)
 	if err != nil {
@@ -302,8 +294,7 @@ func (h *AdminHandler) GetBannedUsers(c *gin.Context) {
 		return
 	}
 
-	// 计算总页数
-	totalPages := int(total) / pageSize
+	// 计算总页�?	totalPages := int(total) / pageSize
 	if int(total)%pageSize > 0 {
 		totalPages++
 	}
@@ -355,8 +346,7 @@ func (h *AdminHandler) AdminAuthMiddleware() gin.HandlerFunc {
 	}
 }
 
-// GetCurrentAdmin 获取当前管理员信息
-func (h *AdminHandler) GetCurrentAdmin(c *gin.Context) {
+// GetCurrentAdmin 获取当前管理员信�?func (h *AdminHandler) GetCurrentAdmin(c *gin.Context) {
 	admin := c.MustGet("admin_user").(*models.EnhancedUser)
 	c.JSON(http.StatusOK, admin)
 }

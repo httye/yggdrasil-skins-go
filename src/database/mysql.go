@@ -14,8 +14,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// MySQLConfig MySQL数据库配置
-type MySQLConfig struct {
+// MySQLConfig MySQL数据库配�?type MySQLConfig struct {
 	Host            string        `mapstructure:"host"`
 	Port            int           `mapstructure:"port"`
 	Database        string        `mapstructure:"database"`
@@ -34,8 +33,7 @@ type MySQLManager struct {
 	DB *gorm.DB
 }
 
-// NewMySQLManager 创建MySQL管理器
-func NewMySQLManager(config *MySQLConfig) (*MySQLManager, error) {
+// NewMySQLManager 创建MySQL管理�?func NewMySQLManager(config *MySQLConfig) (*MySQLManager, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&collation=%s&parseTime=True&loc=Local",
 		config.Username,
 		config.Password,
@@ -70,26 +68,20 @@ func NewMySQLManager(config *MySQLConfig) (*MySQLManager, error) {
 		NowFunc: func() time.Time {
 			return time.Now().Local()
 		},
-		PrepareStmt: true,                              // 预编译语句
-		CreateBatchSize: 100,                           // 批量创建大小
-		QueryFields: true,                              // 查询所有字段
-		DisableForeignKeyConstraintWhenMigrating: true, // 迁移时禁用外键约束
-	}
+		PrepareStmt: true,                              // 预编译语�?		CreateBatchSize: 100,                           // 批量创建大小
+		QueryFields: true,                              // 查询所有字�?		DisableForeignKeyConstraintWhenMigrating: true, // 迁移时禁用外键约�?	}
 
-	// 连接数据库
-	db, err := gorm.Open(mysql.Open(dsn), gormConfig)
+	// 连接数据�?	db, err := gorm.Open(mysql.Open(dsn), gormConfig)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to MySQL: %w", err)
 	}
 
-	// 获取底层SQL数据库连接
-	sqlDB, err := db.DB()
+	// 获取底层SQL数据库连�?	sqlDB, err := db.DB()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get SQL DB: %w", err)
 	}
 
-	// 设置连接池参数
-	sqlDB.SetMaxOpenConns(config.MaxOpenConns)
+	// 设置连接池参�?	sqlDB.SetMaxOpenConns(config.MaxOpenConns)
 	sqlDB.SetMaxIdleConns(config.MaxIdleConns)
 	sqlDB.SetConnMaxLifetime(config.ConnMaxLifetime)
 
@@ -109,8 +101,7 @@ func (m *MySQLManager) AutoMigrate(models ...interface{}) error {
 	return m.DB.AutoMigrate(models...)
 }
 
-// Close 关闭数据库连接
-func (m *MySQLManager) Close() error {
+// Close 关闭数据库连�?func (m *MySQLManager) Close() error {
 	sqlDB, err := m.DB.DB()
 	if err != nil {
 		return err
@@ -123,13 +114,11 @@ func (m *MySQLManager) Transaction(fc func(tx *gorm.DB) error) error {
 	return m.DB.Transaction(fc)
 }
 
-// GetDB 获取数据库实例
-func (m *MySQLManager) GetDB() *gorm.DB {
+// GetDB 获取数据库实�?func (m *MySQLManager) GetDB() *gorm.DB {
 	return m.DB
 }
 
-// HealthCheck 数据库健康检查
-func (m *MySQLManager) HealthCheck() error {
+// HealthCheck 数据库健康检�?func (m *MySQLManager) HealthCheck() error {
 	sqlDB, err := m.DB.DB()
 	if err != nil {
 		return err
@@ -137,8 +126,7 @@ func (m *MySQLManager) HealthCheck() error {
 	return sqlDB.Ping()
 }
 
-// GetStats 获取数据库统计信息
-func (m *MySQLManager) GetStats() map[string]interface{} {
+// GetStats 获取数据库统计信�?func (m *MySQLManager) GetStats() map[string]interface{} {
 	sqlDB, err := m.DB.DB()
 	if err != nil {
 		return map[string]interface{}{"error": err.Error()}
@@ -161,8 +149,7 @@ func (m *MySQLManager) GetStats() map[string]interface{} {
 func LoadMySQLConfig(viper *viper.Viper) (*MySQLConfig, error) {
 	config := &MySQLConfig{}
 	
-	// 设置默认值
-	viper.SetDefault("database.mysql.host", "localhost")
+	// 设置默认�?	viper.SetDefault("database.mysql.host", "localhost")
 	viper.SetDefault("database.mysql.port", 3306)
 	viper.SetDefault("database.mysql.charset", "utf8mb4")
 	viper.SetDefault("database.mysql.collation", "utf8mb4_unicode_ci")
@@ -248,8 +235,7 @@ func Paginate(query *gorm.DB, params *PaginationParams, result interface{}) (*Pa
 		return nil, err
 	}
 	
-	// 应用分页并查询数据
-	query = ApplyPagination(query, params)
+	// 应用分页并查询数�?	query = ApplyPagination(query, params)
 	if err := query.Find(result).Error; err != nil {
 		return nil, err
 	}

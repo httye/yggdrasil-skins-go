@@ -8,8 +8,7 @@ import (
 
 // CORS 跨域资源共享中间件（性能优化版）
 func CORS() gin.HandlerFunc {
-	// 预定义常用的CORS头，避免重复字符串分配
-	const (
+	// 预定义常用的CORS头，避免重复字符串分�?	const (
 		allowOrigin      = "Access-Control-Allow-Origin"
 		allowMethods     = "Access-Control-Allow-Methods"
 		allowHeaders     = "Access-Control-Allow-Headers"
@@ -34,8 +33,7 @@ func CORS() gin.HandlerFunc {
 			return
 		}
 
-		// 设置CORS头（优化：减少Header调用次数）
-		origin := c.Request.Header.Get("Origin")
+		// 设置CORS头（优化：减少Header调用次数�?		origin := c.Request.Header.Get("Origin")
 		if origin != "" {
 			c.Header(allowOrigin, origin)
 		} else {

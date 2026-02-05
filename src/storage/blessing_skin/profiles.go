@@ -5,16 +5,15 @@ import (
 	"errors"
 	"fmt"
 
-	storage "yggdrasil-api-go/src/storage/interface"
-	"yggdrasil-api-go/src/yggdrasil"
+	storage "github.com/httye/yggdrasil-skins-go/src/storage/interface"
+	"github.com/httye/yggdrasil-skins-go/src/yggdrasil"
 
 	"gorm.io/gorm"
 )
 
 // GetProfileByUUID 根据UUID获取角色（单查询优化版）
 func (s *Storage) GetProfileByUUID(uuid string) (*yggdrasil.Profile, error) {
-	// 一次性查询UUID映射和角色信息
-	var result struct {
+	// 一次性查询UUID映射和角色信�?	var result struct {
 		PlayerName string `gorm:"column:player_name"`
 		UUID       string `gorm:"column:uuid"`
 	}
@@ -31,8 +30,7 @@ func (s *Storage) GetProfileByUUID(uuid string) (*yggdrasil.Profile, error) {
 		return nil, err
 	}
 
-	// 获取角色的材质信息
-	textures, err := s.GetPlayerTextures(result.UUID)
+	// 获取角色的材质信�?	textures, err := s.GetPlayerTextures(result.UUID)
 	if err != nil {
 		// 如果获取材质失败，仍然返回角色信息，但properties为空
 		return &yggdrasil.Profile{
@@ -91,8 +89,7 @@ func (s *Storage) GetProfileByName(name string) (*yggdrasil.Profile, error) {
 		return nil, err
 	}
 
-	// 如果UUID不存在，创建它
-	uuid := result.UUID
+	// 如果UUID不存在，创建�?	uuid := result.UUID
 	if uuid == "" {
 		uuid, err = s.uuidGen.GetOrCreateUUID(name)
 		if err != nil {
@@ -100,8 +97,7 @@ func (s *Storage) GetProfileByName(name string) (*yggdrasil.Profile, error) {
 		}
 	}
 
-	// 获取角色的材质信息
-	textures, err := s.GetPlayerTextures(uuid)
+	// 获取角色的材质信�?	textures, err := s.GetPlayerTextures(uuid)
 	if err != nil {
 		// 如果获取材质失败，仍然返回角色信息，但properties为空
 		return &yggdrasil.Profile{
@@ -140,8 +136,7 @@ func (s *Storage) GetProfileByName(name string) (*yggdrasil.Profile, error) {
 	}, nil
 }
 
-// GetProfilesByNames 根据名称列表批量获取角色（优化版，自动创建UUID）
-func (s *Storage) GetProfilesByNames(names []string) ([]*yggdrasil.Profile, error) {
+// GetProfilesByNames 根据名称列表批量获取角色（优化版，自动创建UUID�?func (s *Storage) GetProfilesByNames(names []string) ([]*yggdrasil.Profile, error) {
 	if len(names) == 0 {
 		return []*yggdrasil.Profile{}, nil
 	}
@@ -169,8 +164,7 @@ func (s *Storage) GetProfilesByNames(names []string) ([]*yggdrasil.Profile, erro
 		return nil, err
 	}
 
-	// 4. 构建结果（所有存在的角色都应该有UUID）
-	var profiles []*yggdrasil.Profile
+	// 4. 构建结果（所有存在的角色都应该有UUID�?	var profiles []*yggdrasil.Profile
 	for _, player := range players {
 		if uuid, exists := uuidMap[player.Name]; exists {
 			profiles = append(profiles, &yggdrasil.Profile{
@@ -179,8 +173,7 @@ func (s *Storage) GetProfilesByNames(names []string) ([]*yggdrasil.Profile, erro
 				Properties: []yggdrasil.ProfileProperty{}, // 初始化为空数组而不是nil
 			})
 		} else {
-			// 这种情况理论上不应该发生，因为GetUUIDsByNames会自动创建
-			// 但为了安全起见，我们单独处理
+			// 这种情况理论上不应该发生，因为GetUUIDsByNames会自动创�?			// 但为了安全起见，我们单独处理
 			uuid, err := s.uuidGen.GetOrCreateUUID(player.Name)
 			if err == nil {
 				profiles = append(profiles, &yggdrasil.Profile{
@@ -207,8 +200,7 @@ func (s *Storage) GetProfilesByUserEmail(userEmail string) ([]*yggdrasil.Profile
 		return nil, err
 	}
 
-	// 获取用户的所有角色
-	var players []Player
+	// 获取用户的所有角�?	var players []Player
 	err = s.db.Where("uid = ?", user.UID).Find(&players).Error
 	if err != nil {
 		return nil, err
@@ -218,8 +210,7 @@ func (s *Storage) GetProfilesByUserEmail(userEmail string) ([]*yggdrasil.Profile
 		return []*yggdrasil.Profile{}, nil
 	}
 
-	// 提取角色名列表
-	playerNames := make([]string, len(players))
+	// 提取角色名列�?	playerNames := make([]string, len(players))
 	for i, player := range players {
 		playerNames[i] = player.Name
 	}
@@ -230,8 +221,7 @@ func (s *Storage) GetProfilesByUserEmail(userEmail string) ([]*yggdrasil.Profile
 		return nil, err
 	}
 
-	// 构建结果（所有角色都应该有UUID）
-	var profiles []*yggdrasil.Profile
+	// 构建结果（所有角色都应该有UUID�?	var profiles []*yggdrasil.Profile
 	for _, player := range players {
 		if uuid, exists := uuidMap[player.Name]; exists {
 			profiles = append(profiles, &yggdrasil.Profile{
@@ -289,8 +279,7 @@ func (s *Storage) GetUserProfiles(userUUID string) ([]*yggdrasil.Profile, error)
 		return nil, err
 	}
 
-	// 获取用户的所有角色
-	var players []Player
+	// 获取用户的所有角�?	var players []Player
 	err = s.db.Where("uid = ?", user.UID).Find(&players).Error
 	if err != nil {
 		return nil, err

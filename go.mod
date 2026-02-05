@@ -1,4 +1,7 @@
-module yggdrasil-api-go
+module github.com/httye/yggdrasil-skins-go
+
+// 注意：该模块路径在2024年2月5日从"yggdrasil-api-go"更改为"github.com/httye/yggdrasil-skins-go"
+// 请确保所有导入路径都已更新为新的模块路径
 
 go 1.24.5
 
@@ -12,8 +15,8 @@ require (
 	golang.org/x/crypto v0.28.0
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.6.0
-	gorm.io/gorm v1.30.1
-	gorm.io/plugin/dbresolver v1.5.2
+	gorm.io/gorm v1.30.0
+	gorm.io/plugin/dbresolver v1.5.0
 )
 
 require (

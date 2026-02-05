@@ -8,13 +8,12 @@ import (
 	"os"
 	"path/filepath"
 	"time"
-	storage "yggdrasil-api-go/src/storage/interface"
+	storage "github.com/httye/yggdrasil-skins-go/src/storage/interface"
 
 	"github.com/bytedance/sonic"
 )
 
-// TextureMetadata 材质元数据
-type TextureMetadata struct {
+// TextureMetadata 材质元数�?type TextureMetadata struct {
 	Type       storage.TextureType `json:"type"`
 	PlayerUUID string              `json:"player_uuid"`
 	Hash       string              `json:"hash"`
@@ -40,8 +39,7 @@ func (s *Storage) UploadTexture(textureType storage.TextureType, playerUUID stri
 	hash := sha256.Sum256(data)
 	hashStr := hex.EncodeToString(hash[:])
 
-	// 确定文件扩展名
-	extension := ".png"
+	// 确定文件扩展�?	extension := ".png"
 	if len(data) > 3 && data[0] == 0xFF && data[1] == 0xD8 && data[2] == 0xFF {
 		extension = ".jpg"
 	}
@@ -58,8 +56,7 @@ func (s *Storage) UploadTexture(textureType storage.TextureType, playerUUID stri
 		return nil, fmt.Errorf("failed to save texture file: %w", err)
 	}
 
-	// 保存材质元数据
-	textureMetadata := &TextureMetadata{
+	// 保存材质元数�?	textureMetadata := &TextureMetadata{
 		Type:       textureType,
 		PlayerUUID: playerUUID,
 		Hash:       hashStr,
@@ -96,8 +93,7 @@ func (s *Storage) GetTexture(textureType storage.TextureType, playerUUID string)
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
-	// 查找材质元数据文件
-	textureDir := string(textureType) + "s"
+	// 查找材质元数据文�?	textureDir := string(textureType) + "s"
 	metadataPattern := filepath.Join(s.dataDir, "textures", textureDir, "*", "*", "*.json")
 
 	matches, err := filepath.Glob(metadataPattern)
@@ -112,9 +108,8 @@ func (s *Storage) GetTexture(textureType storage.TextureType, playerUUID string)
 		}
 
 		if metadata.PlayerUUID == playerUUID && metadata.Type == textureType {
-			// 确定文件扩展名
-			extension := ".png"
-			texturePath := metadataPath[:len(metadataPath)-5] + extension // 移除.json，添加.png
+			// 确定文件扩展�?			extension := ".png"
+			texturePath := metadataPath[:len(metadataPath)-5] + extension // 移除.json，添�?png
 			if _, err := os.Stat(texturePath); os.IsNotExist(err) {
 				texturePath = metadataPath[:len(metadataPath)-5] + ".jpg"
 			}
@@ -142,8 +137,7 @@ func (s *Storage) DeleteTexture(textureType storage.TextureType, playerUUID stri
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	// 查找并删除材质文件和元数据
-	textureDir := string(textureType) + "s"
+	// 查找并删除材质文件和元数�?	textureDir := string(textureType) + "s"
 	metadataPattern := filepath.Join(s.dataDir, "textures", textureDir, "*", "*", "*.json")
 
 	matches, err := filepath.Glob(metadataPattern)
@@ -166,8 +160,7 @@ func (s *Storage) DeleteTexture(textureType storage.TextureType, playerUUID stri
 			}
 			os.Remove(texturePath)
 
-			// 删除元数据文件
-			os.Remove(metadataPath)
+			// 删除元数据文�?			os.Remove(metadataPath)
 			return nil
 		}
 	}
@@ -180,13 +173,11 @@ func (s *Storage) GetTextureURL(textureType storage.TextureType, playerUUID stri
 	return fmt.Sprintf("%s/textures/%s/%s", s.textureConfig.BaseURL, textureType, playerUUID)
 }
 
-// IsUploadSupported 检查是否支持材质上传
-func (s *Storage) IsUploadSupported() bool {
+// IsUploadSupported 检查是否支持材质上�?func (s *Storage) IsUploadSupported() bool {
 	return s.textureConfig.UploadEnabled
 }
 
-// saveTextureMetadata 保存材质元数据
-func (s *Storage) saveTextureMetadata(path string, metadata *TextureMetadata) error {
+// saveTextureMetadata 保存材质元数�?func (s *Storage) saveTextureMetadata(path string, metadata *TextureMetadata) error {
 	if err := s.ensureDir(path); err != nil {
 		return err
 	}
@@ -199,8 +190,7 @@ func (s *Storage) saveTextureMetadata(path string, metadata *TextureMetadata) er
 	return os.WriteFile(path, data, 0644)
 }
 
-// loadTextureMetadata 加载材质元数据
-func (s *Storage) loadTextureMetadata(path string) (*TextureMetadata, error) {
+// loadTextureMetadata 加载材质元数�?func (s *Storage) loadTextureMetadata(path string) (*TextureMetadata, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err

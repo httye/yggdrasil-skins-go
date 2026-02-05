@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"yggdrasil-api-go/src/yggdrasil"
+	"github.com/httye/yggdrasil-skins-go/src/yggdrasil"
 
 	"github.com/bytedance/sonic"
 )
@@ -30,8 +30,7 @@ func (s *Storage) loadUsers() error {
 		return err
 	}
 
-	// 加载到缓存
-	for _, user := range users {
+	// 加载到缓�?	for _, user := range users {
 		s.users[user.Email] = user
 		s.userProfiles[user.Email] = make([]string, 0)
 	}
@@ -85,7 +84,7 @@ func (s *Storage) createDefaultUsers() error {
 			UID:        3,
 			Email:      "admin@example.com",
 			Password:   "$2a$10$example3",
-			Nickname:   "管理员",
+			Nickname:   "管理�?,
 			Score:      1000,
 			Permission: 1,
 			Verified:   true,
@@ -114,8 +113,7 @@ func (s *Storage) GetUserByEmail(email string) (*yggdrasil.User, error) {
 	return nil, fmt.Errorf("user not found")
 }
 
-// GetUserByPlayerName 根据角色名获取用户
-func (s *Storage) GetUserByPlayerName(playerName string) (*yggdrasil.User, error) {
+// GetUserByPlayerName 根据角色名获取用�?func (s *Storage) GetUserByPlayerName(playerName string) (*yggdrasil.User, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
@@ -132,8 +130,7 @@ func (s *Storage) GetUserByPlayerName(playerName string) (*yggdrasil.User, error
 		return nil, fmt.Errorf("player not found")
 	}
 
-	// 通过角色的UID找到对应的用户
-	for _, user := range s.users {
+	// 通过角色的UID找到对应的用�?	for _, user := range s.users {
 		if user.UID == targetPlayer.UID {
 			return s.convertFileUserToYggdrasilUser(user)
 		}
@@ -206,8 +203,7 @@ func (s *Storage) DeleteUser(email string) error {
 		return fmt.Errorf("user not found")
 	}
 
-	// 删除用户的所有角色
-	for playerID, player := range s.players {
+	// 删除用户的所有角�?	for playerID, player := range s.players {
 		if player.UID == user.UID {
 			delete(s.players, playerID)
 		}
@@ -223,8 +219,7 @@ func (s *Storage) DeleteUser(email string) error {
 	return s.saveUsers()
 }
 
-// ListUsers 列出所有用户（分页）
-func (s *Storage) ListUsers(offset, limit int) ([]*yggdrasil.User, int, error) {
+// ListUsers 列出所有用户（分页�?func (s *Storage) ListUsers(offset, limit int) ([]*yggdrasil.User, int, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
@@ -232,8 +227,7 @@ func (s *Storage) ListUsers(offset, limit int) ([]*yggdrasil.User, int, error) {
 	for _, user := range s.users {
 		yggdrasilUser, err := s.convertFileUserToYggdrasilUser(user)
 		if err != nil {
-			continue // 跳过转换失败的用户
-		}
+			continue // 跳过转换失败的用�?		}
 		users = append(users, yggdrasilUser)
 	}
 

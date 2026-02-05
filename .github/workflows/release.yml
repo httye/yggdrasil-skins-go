@@ -64,6 +64,11 @@ jobs:
         with:
           go-version: "1.24.5"
 
+      - name: 🔧 Fix go.sum
+        run: |
+          chmod +x .github/scripts/fix-go-sum.sh
+          ./.github/scripts/fix-go-sum.sh
+          
       - name: 🔨 Build Binary
         env:
           GOOS: ${{ matrix.goos }}

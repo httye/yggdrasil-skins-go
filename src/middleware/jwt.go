@@ -6,11 +6,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/NewNanCity/YggdrasilGo/src/utils"
+	"github.com/httye/yggdrasil-skins-go/src/utils"
 )
 
-// JWTAuthMiddleware JWT认证中间件
-func JWTAuthMiddleware() gin.HandlerFunc {
+// JWTAuthMiddleware JWT认证中间�?func JWTAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 从请求头获取token
 		authHeader := c.GetHeader("Authorization")
@@ -44,8 +43,7 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		// 将用户信息存储到上下文
-		c.Set("user_uuid", claims.UserUUID)
+		// 将用户信息存储到上下�?		c.Set("user_uuid", claims.UserUUID)
 		c.Set("username", claims.Username)
 		c.Set("is_admin", claims.IsAdmin)
 		

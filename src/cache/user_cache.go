@@ -5,18 +5,16 @@ import (
 	"sync"
 	"time"
 
-	"yggdrasil-api-go/src/middleware"
-	"yggdrasil-api-go/src/yggdrasil"
+	"github.com/httye/yggdrasil-skins-go/src/middleware"
+	"github.com/httye/yggdrasil-skins-go/src/yggdrasil"
 )
 
-// UserCacheItem 用户缓存项
-type UserCacheItem struct {
+// UserCacheItem 用户缓存�?type UserCacheItem struct {
 	User      *yggdrasil.User
 	ExpiresAt time.Time
 }
 
-// IsExpired 检查是否过期
-func (item *UserCacheItem) IsExpired() bool {
+// IsExpired 检查是否过�?func (item *UserCacheItem) IsExpired() bool {
 	return time.Now().After(item.ExpiresAt)
 }
 
@@ -46,8 +44,7 @@ func (uc *UserCache) Get(key string) (*yggdrasil.User, bool) {
 			middleware.GlobalCacheMonitor.RecordHit()
 			return item.User, true
 		}
-		// 过期则删除
-		uc.cache.Delete(key)
+		// 过期则删�?		uc.cache.Delete(key)
 	}
 
 	middleware.GlobalCacheMonitor.RecordMiss()
@@ -106,20 +103,16 @@ func (uc *UserCache) GetStats() map[string]interface{} {
 	}
 }
 
-// 全局用户缓存实例（默认5分钟缓存，可通过配置修改）
-var GlobalUserCache = NewUserCache(5 * time.Minute)
+// 全局用户缓存实例（默�?分钟缓存，可通过配置修改�?var GlobalUserCache = NewUserCache(5 * time.Minute)
 
-// InitUserCache 根据配置初始化用户缓存
-func InitUserCache(duration time.Duration) {
+// InitUserCache 根据配置初始化用户缓�?func InitUserCache(duration time.Duration) {
 	if duration > 0 {
 		GlobalUserCache = NewUserCache(duration)
 	}
 }
 
-// CachedUserLookup 带缓存的用户查询装饰器
-func CachedUserLookup(key string, lookupFunc func() (*yggdrasil.User, error)) (*yggdrasil.User, error) {
-	// 尝试从缓存获取
-	if user, found := GlobalUserCache.Get(key); found {
+// CachedUserLookup 带缓存的用户查询装饰�?func CachedUserLookup(key string, lookupFunc func() (*yggdrasil.User, error)) (*yggdrasil.User, error) {
+	// 尝试从缓存获�?	if user, found := GlobalUserCache.Get(key); found {
 		return user, nil
 	}
 
@@ -129,7 +122,6 @@ func CachedUserLookup(key string, lookupFunc func() (*yggdrasil.User, error)) (*
 		return nil, err
 	}
 
-	// 存储到缓存
-	GlobalUserCache.Set(key, user)
+	// 存储到缓�?	GlobalUserCache.Set(key, user)
 	return user, nil
 }

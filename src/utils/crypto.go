@@ -10,12 +10,10 @@ import (
 
 // GenerateUUID 生成UUID v4
 func GenerateUUID() string {
-	// 生成16字节的随机数据
-	uuid := make([]byte, 16)
+	// 生成16字节的随机数�?	uuid := make([]byte, 16)
 	_, err := rand.Read(uuid)
 	if err != nil {
-		// 如果随机数生成失败，使用时间戳+随机数作为备选方案
-		return generateFallbackUUID()
+		// 如果随机数生成失败，使用时间�?随机数作为备选方�?		return generateFallbackUUID()
 	}
 
 	// 设置UUID版本 (4)
@@ -35,8 +33,7 @@ func generateFallbackUUID() string {
 	randomBytes := make([]byte, 8)
 	rand.Read(randomBytes)
 
-	// 组合时间戳和随机数
-	combined := fmt.Sprintf("%d-%s", timestamp, hex.EncodeToString(randomBytes))
+	// 组合时间戳和随机�?	combined := fmt.Sprintf("%d-%s", timestamp, hex.EncodeToString(randomBytes))
 	
 	// 生成哈希
 	hash := sha256.Sum256([]byte(combined))
@@ -59,21 +56,18 @@ func GenerateRandomString(length int) string {
 	return string(b)
 }
 
-// GenerateSecureToken 生成安全的随机令牌（用于邮箱验证、密码重置等）
-func GenerateSecureToken() string {
-	// 生成32字节的随机数据
-	token := make([]byte, 32)
+// GenerateSecureToken 生成安全的随机令牌（用于邮箱验证、密码重置等�?func GenerateSecureToken() string {
+	// 生成32字节的随机数�?	token := make([]byte, 32)
 	_, err := rand.Read(token)
 	if err != nil {
-		// 如果失败，使用备选方案
-		return GenerateRandomString(64)
+		// 如果失败，使用备选方�?		return GenerateRandomString(64)
 	}
 	
 	// 编码为十六进制字符串
 	return hex.EncodeToString(token)
 }
 
-// GenerateShortCode 生成短验证码（6位数字）
+// GenerateShortCode 生成短验证码�?位数字）
 func GenerateShortCode() string {
 	code := make([]byte, 6)
 	rand.Read(code)

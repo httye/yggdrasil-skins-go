@@ -6,20 +6,17 @@ import (
 
 	"gorm.io/gorm"
 
-	"github.com/NewNanCity/YggdrasilGo/src/models"
+	"github.com/httye/yggdrasil-skins-go/src/models"
 )
 
 var (
 	// ErrProfileLimitReached 角色数量限制错误
 	ErrProfileLimitReached = errors.New("profile limit reached")
-	// ErrUserBanned 用户被封禁错误
-	ErrUserBanned = errors.New("user is banned")
-	// ErrProfileNotFound 角色未找到错误
-	ErrProfileNotFound = errors.New("profile not found")
+	// ErrUserBanned 用户被封禁错�?	ErrUserBanned = errors.New("user is banned")
+	// ErrProfileNotFound 角色未找到错�?	ErrProfileNotFound = errors.New("profile not found")
 	// ErrProfileNameExists 角色名已存在错误
 	ErrProfileNameExists = errors.New("profile name already exists")
-	// ErrProfileNotOwned 角色不属于用户错误
-	ErrProfileNotOwned = errors.New("profile does not belong to user")
+	// ErrProfileNotOwned 角色不属于用户错�?	ErrProfileNotOwned = errors.New("profile does not belong to user")
 )
 
 // ProfileLimitService 角色限制服务
@@ -53,10 +50,8 @@ func (s *ProfileLimitService) CanCreateProfile(userUUID string) (bool, int, int,
 		return false, 0, user.MaxProfiles, fmt.Errorf("failed to count profiles: %w", err)
 	}
 
-	// 检查是否达到限制
-	if user.MaxProfiles == -1 {
-		return true, int(currentCount), user.MaxProfiles, nil // 无限制
-	}
+	// 检查是否达到限�?	if user.MaxProfiles == -1 {
+		return true, int(currentCount), user.MaxProfiles, nil // 无限�?	}
 
 	canCreate := int(currentCount) < user.MaxProfiles
 	return canCreate, int(currentCount), user.MaxProfiles, nil
@@ -64,8 +59,7 @@ func (s *ProfileLimitService) CanCreateProfile(userUUID string) (bool, int, int,
 
 // CreateProfile 创建角色（带限制检查）
 func (s *ProfileLimitService) CreateProfile(userUUID, profileName string) (*models.Profile, error) {
-	// 检查是否可以创建角色
-	canCreate, currentCount, maxAllowed, err := s.CanCreateProfile(userUUID)
+	// 检查是否可以创建角�?	canCreate, currentCount, maxAllowed, err := s.CanCreateProfile(userUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -77,8 +71,7 @@ func (s *ProfileLimitService) CreateProfile(userUUID, profileName string) (*mode
 		return nil, fmt.Errorf("%w: current %d, maximum %d", ErrProfileLimitReached, currentCount, maxAllowed)
 	}
 
-	// 检查角色名是否已存在
-	var existingProfile models.Profile
+	// 检查角色名是否已存�?	var existingProfile models.Profile
 	err = s.db.Where("name = ?", profileName).First(&existingProfile).Error
 	if err == nil {
 		return nil, ErrProfileNameExists
@@ -105,15 +98,13 @@ func (s *ProfileLimitService) CreateProfile(userUUID, profileName string) (*mode
 	return profile, nil
 }
 
-// GetUserProfiles 获取用户的所有角色
-func (s *ProfileLimitService) GetUserProfiles(userUUID string) ([]models.Profile, error) {
+// GetUserProfiles 获取用户的所有角�?func (s *ProfileLimitService) GetUserProfiles(userUUID string) ([]models.Profile, error) {
 	var profiles []models.Profile
 	err := s.db.Where("user_uuid = ?", userUUID).Find(&profiles).Error
 	return profiles, err
 }
 
-// GetUserActiveProfiles 获取用户的活跃角色
-func (s *ProfileLimitService) GetUserActiveProfiles(userUUID string) ([]models.Profile, error) {
+// GetUserActiveProfiles 获取用户的活跃角�?func (s *ProfileLimitService) GetUserActiveProfiles(userUUID string) ([]models.Profile, error) {
 	var profiles []models.Profile
 	err := s.db.Where("user_uuid = ? AND is_active = ?", userUUID, true).Find(&profiles).Error
 	return profiles, err
@@ -162,8 +153,7 @@ func (s *ProfileLimitService) DeactivateProfile(profileUUID string) error {
 	})
 }
 
-// ActivateProfile 激活角色
-func (s *ProfileLimitService) ActivateProfile(profileUUID string) error {
+// ActivateProfile 激活角�?func (s *ProfileLimitService) ActivateProfile(profileUUID string) error {
 	// 获取角色信息
 	profile, err := s.GetProfileByUUID(profileUUID)
 	if err != nil {
@@ -243,8 +233,7 @@ func (s *ProfileLimitService) BatchDeactivateProfiles(userUUID string) error {
 
 // generateUUID 生成UUID（简化版本，实际应该使用UUID库）
 func generateUUID() string {
-	// 这里应该使用github.com/google/uuid或其他UUID库
-	// 为了简化，这里返回一个模拟的UUID
+	// 这里应该使用github.com/google/uuid或其他UUID�?	// 为了简化，这里返回一个模拟的UUID
 	return fmt.Sprintf("%d-%d-%d-%d-%d", 
 		time.Now().Unix(), 
 		time.Now().UnixNano()%1000, 

@@ -1,5 +1,4 @@
-// Package blessing_skin 材质签名器
-package blessing_skin
+// Package blessing_skin 材质签名�?package blessing_skin
 
 import (
 	"crypto"
@@ -14,13 +13,12 @@ import (
 	"sync"
 	"time"
 
-	"yggdrasil-api-go/src/yggdrasil"
+	"github.com/httye/yggdrasil-skins-go/src/yggdrasil"
 
 	"github.com/bytedance/sonic"
 )
 
-// TextureSigner 材质签名器
-type TextureSigner struct {
+// TextureSigner 材质签名�?type TextureSigner struct {
 	storage          *Storage
 	cachedPrivateKey *rsa.PrivateKey
 	cachedPublicKey  *rsa.PublicKey
@@ -28,15 +26,13 @@ type TextureSigner struct {
 	keyPairMutex     sync.RWMutex
 }
 
-// NewTextureSigner 创建材质签名器
-func NewTextureSigner(storage *Storage) *TextureSigner {
+// NewTextureSigner 创建材质签名�?func NewTextureSigner(storage *Storage) *TextureSigner {
 	return &TextureSigner{
 		storage: storage,
 	}
 }
 
-// TextureData 材质数据结构（与BlessingSkin兼容）
-type TextureData struct {
+// TextureData 材质数据结构（与BlessingSkin兼容�?type TextureData struct {
 	Timestamp   int64          `json:"timestamp"`
 	ProfileID   string         `json:"profileId"`
 	ProfileName string         `json:"profileName"`
@@ -95,8 +91,7 @@ func (ts *TextureSigner) SignProfile(profile *yggdrasil.Profile, unsigned bool) 
 		}
 	}
 
-	// 序列化材质数据
-	textureJSON, err := sonic.Marshal(textureData)
+	// 序列化材质数�?	textureJSON, err := sonic.Marshal(textureData)
 	if err != nil {
 		return fmt.Errorf("failed to marshal texture data: %w", err)
 	}
@@ -104,32 +99,27 @@ func (ts *TextureSigner) SignProfile(profile *yggdrasil.Profile, unsigned bool) 
 	// Base64编码
 	textureValue := base64.StdEncoding.EncodeToString(textureJSON)
 
-	// 创建材质属性
-	properties := []yggdrasil.ProfileProperty{
+	// 创建材质属�?	properties := []yggdrasil.ProfileProperty{
 		{
 			Name:  "textures",
 			Value: textureValue,
 		},
 	}
 
-	// 检查是否支持材质上传
-	if ts.storage.IsUploadSupported() {
+	// 检查是否支持材质上�?	if ts.storage.IsUploadSupported() {
 		properties = append(properties, yggdrasil.ProfileProperty{
 			Name:  "uploadableTextures",
 			Value: "skin,cape",
 		})
 	}
 
-	// 如果需要签名
-	if !unsigned {
-		// 获取缓存的RSA密钥对
-		privateKey, _, err := ts.getCachedRSAKeyPair()
+	// 如果需要签�?	if !unsigned {
+		// 获取缓存的RSA密钥�?		privateKey, _, err := ts.getCachedRSAKeyPair()
 		if err != nil {
 			return fmt.Errorf("failed to get RSA key pair: %w", err)
 		}
 
-		// 签名材质属性
-		for i := range properties {
+		// 签名材质属�?		for i := range properties {
 			if properties[i].Name == "textures" {
 				signature, err := ts.signData(properties[i].Value, privateKey)
 				if err != nil {
@@ -146,8 +136,7 @@ func (ts *TextureSigner) SignProfile(profile *yggdrasil.Profile, unsigned bool) 
 	return nil
 }
 
-// parsePrivateKey 解析PEM格式的私钥
-func (ts *TextureSigner) parsePrivateKey(privateKeyPEM string) (*rsa.PrivateKey, error) {
+// parsePrivateKey 解析PEM格式的私�?func (ts *TextureSigner) parsePrivateKey(privateKeyPEM string) (*rsa.PrivateKey, error) {
 	block, _ := pem.Decode([]byte(privateKeyPEM))
 	if block == nil {
 		return nil, fmt.Errorf("failed to decode PEM block")
@@ -173,15 +162,12 @@ func (ts *TextureSigner) parsePrivateKey(privateKeyPEM string) (*rsa.PrivateKey,
 	return rsaKey, nil
 }
 
-// signData 使用RSA私钥签名数据（与BlessingSkin兼容）
-func (ts *TextureSigner) signData(data string, privateKey *rsa.PrivateKey) ([]byte, error) {
-	// 使用SHA1哈希（与BlessingSkin的openssl_sign兼容）
-	hash := sha1.Sum([]byte(data))
+// signData 使用RSA私钥签名数据（与BlessingSkin兼容�?func (ts *TextureSigner) signData(data string, privateKey *rsa.PrivateKey) ([]byte, error) {
+	// 使用SHA1哈希（与BlessingSkin的openssl_sign兼容�?	hash := sha1.Sum([]byte(data))
 	return rsa.SignPKCS1v15(rand.Reader, privateKey, crypto.SHA1, hash[:])
 }
 
-// GetPublicKey 获取公钥（用于客户端验证）
-func (ts *TextureSigner) GetPublicKey() (string, error) {
+// GetPublicKey 获取公钥（用于客户端验证�?func (ts *TextureSigner) GetPublicKey() (string, error) {
 	privateKeyPEM, err := ts.storage.optionsMgr.GetOption("ygg_private_key")
 	if err != nil || privateKeyPEM == "" {
 		return "", fmt.Errorf("RSA private key not configured")
@@ -232,10 +218,8 @@ func (ts *TextureSigner) GetSignatureKeyPair() (privateKey string, publicKey str
 	return privateKeyPEM, publicKeyPEM, nil
 }
 
-// getCachedRSAKeyPair 获取缓存的RSA密钥对
-func (ts *TextureSigner) getCachedRSAKeyPair() (*rsa.PrivateKey, *rsa.PublicKey, error) {
-	// 先检查缓存
-	ts.keyPairMutex.RLock()
+// getCachedRSAKeyPair 获取缓存的RSA密钥�?func (ts *TextureSigner) getCachedRSAKeyPair() (*rsa.PrivateKey, *rsa.PublicKey, error) {
+	// 先检查缓�?	ts.keyPairMutex.RLock()
 	if ts.keyPairCached {
 		defer ts.keyPairMutex.RUnlock()
 		return ts.cachedPrivateKey, ts.cachedPublicKey, nil
@@ -251,8 +235,7 @@ func (ts *TextureSigner) getCachedRSAKeyPair() (*rsa.PrivateKey, *rsa.PublicKey,
 		return ts.cachedPrivateKey, ts.cachedPublicKey, nil
 	}
 
-	// 从options表读取私钥
-	privateKeyPEM, err := ts.storage.optionsMgr.GetOption("ygg_private_key")
+	// 从options表读取私�?	privateKeyPEM, err := ts.storage.optionsMgr.GetOption("ygg_private_key")
 	if err != nil || privateKeyPEM == "" {
 		return nil, nil, fmt.Errorf("RSA private key not configured")
 	}
@@ -266,8 +249,7 @@ func (ts *TextureSigner) getCachedRSAKeyPair() (*rsa.PrivateKey, *rsa.PublicKey,
 	// 提取公钥
 	publicKey := &privateKey.PublicKey
 
-	// 缓存密钥对
-	ts.cachedPrivateKey = privateKey
+	// 缓存密钥�?	ts.cachedPrivateKey = privateKey
 	ts.cachedPublicKey = publicKey
 	ts.keyPairCached = true
 

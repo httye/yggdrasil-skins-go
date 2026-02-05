@@ -1,12 +1,11 @@
-// Package redis Redis Session缓存实现（BlessingSkin兼容）
-package redis
+// Package redis Redis Session缓存实现（BlessingSkin兼容�?package redis
 
 import (
 	"context"
 	"fmt"
 	"time"
 
-	"yggdrasil-api-go/src/yggdrasil"
+	"github.com/httye/yggdrasil-skins-go/src/yggdrasil"
 
 	"github.com/bytedance/sonic"
 	"github.com/go-redis/redis/v8"
@@ -44,10 +43,8 @@ func NewSessionCache(options map[string]any) (*SessionCache, error) {
 	}, nil
 }
 
-// Store 存储Session（优化版：验证JWT但只存储必要信息）
-func (c *SessionCache) Store(serverID string, session *yggdrasil.Session) error {
-	// 创建简化的Session对象（不存储AccessToken和ProfileID）
-	cacheSession := &yggdrasil.Session{
+// Store 存储Session（优化版：验证JWT但只存储必要信息�?func (c *SessionCache) Store(serverID string, session *yggdrasil.Session) error {
+	// 创建简化的Session对象（不存储AccessToken和ProfileID�?	cacheSession := &yggdrasil.Session{
 		ServerID:    serverID,
 		AccessToken: session.AccessToken,
 		ProfileID:   session.ProfileID,
@@ -61,7 +58,7 @@ func (c *SessionCache) Store(serverID string, session *yggdrasil.Session) error 
 		return fmt.Errorf("failed to marshal session: %w", err)
 	}
 
-	// Session固定过期时间为30秒（与Yggdrasil标准一致）
+	// Session固定过期时间�?0秒（与Yggdrasil标准一致）
 	ttl := 30 * time.Second
 
 	// 存储Session
@@ -101,8 +98,7 @@ func (c *SessionCache) Delete(serverID string) error {
 
 // CleanupExpired 清理过期Session
 func (c *SessionCache) CleanupExpired() error {
-	// Redis会自动清理过期的键，这里不需要额外操作
-	return nil
+	// Redis会自动清理过期的键，这里不需要额外操�?	return nil
 }
 
 // Close 关闭缓存连接

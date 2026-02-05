@@ -1,10 +1,9 @@
-// Package cache 定义缓存接口和相关类型
-package cache
+// Package cache 定义缓存接口和相关类�?package cache
 
 import (
 	"time"
 
-	"yggdrasil-api-go/src/yggdrasil"
+	"github.com/httye/yggdrasil-skins-go/src/yggdrasil"
 )
 
 // TokenCache Token缓存接口
@@ -66,8 +65,7 @@ type CacheFactory interface {
 	// CreateSessionCache 创建Session缓存实例
 	CreateSessionCache(cacheType string, options map[string]any) (SessionCache, error)
 
-	// GetSupportedTypes 获取支持的缓存类型
-	GetSupportedTypes() []string
+	// GetSupportedTypes 获取支持的缓存类�?	GetSupportedTypes() []string
 }
 
 // CacheConfig 缓存配置
@@ -85,5 +83,4 @@ type BlessingSkinCacheEntry struct {
 // LaravelCacheEntry Laravel缓存条目格式（用于文件缓存兼容）
 type LaravelCacheEntry struct {
 	Value     string `json:"value"`      // 序列化的数据
-	ExpiresAt int64  `json:"expires_at"` // 过期时间戳
-}
+	ExpiresAt int64  `json:"expires_at"` // 过期时间�?}

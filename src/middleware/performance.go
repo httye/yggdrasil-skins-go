@@ -1,16 +1,14 @@
-// Package middleware 性能监控中间件
-package middleware
+// Package middleware 性能监控中间�?package middleware
 
 import (
 	"time"
 
-	"yggdrasil-api-go/src/utils"
+	"github.com/httye/yggdrasil-skins-go/src/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
-// PerformanceMonitor 性能监控中间件
-// 自动记录所有API请求的性能指标
+// PerformanceMonitor 性能监控中间�?// 自动记录所有API请求的性能指标
 func PerformanceMonitor() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
@@ -48,8 +46,7 @@ func (cm *CacheMonitor) RecordHit() {
 	utils.GlobalMetrics.RecordCacheHit()
 }
 
-// RecordMiss 记录缓存未命中
-func (cm *CacheMonitor) RecordMiss() {
+// RecordMiss 记录缓存未命�?func (cm *CacheMonitor) RecordMiss() {
 	utils.GlobalMetrics.RecordCacheMiss()
 }
 

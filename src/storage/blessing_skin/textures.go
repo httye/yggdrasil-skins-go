@@ -5,11 +5,10 @@ import (
 	"fmt"
 	"strings"
 
-	storage "yggdrasil-api-go/src/storage/interface"
+	storage "github.com/httye/yggdrasil-skins-go/src/storage/interface"
 )
 
-// UploadTexture BlessingSkin存储不支持材质上传
-func (s *Storage) UploadTexture(textureType storage.TextureType, playerUUID string, data []byte, metadata *storage.TextureMetadata) (*storage.TextureInfo, error) {
+// UploadTexture BlessingSkin存储不支持材质上�?func (s *Storage) UploadTexture(textureType storage.TextureType, playerUUID string, data []byte, metadata *storage.TextureMetadata) (*storage.TextureInfo, error) {
 	return nil, fmt.Errorf("texture upload is not supported in BlessingSkin storage")
 }
 
@@ -53,8 +52,7 @@ func (s *Storage) GetTexture(textureType storage.TextureType, playerUUID string)
 	}, nil
 }
 
-// DeleteTexture BlessingSkin存储不支持材质删除
-func (s *Storage) DeleteTexture(textureType storage.TextureType, playerUUID string) error {
+// DeleteTexture BlessingSkin存储不支持材质删�?func (s *Storage) DeleteTexture(textureType storage.TextureType, playerUUID string) error {
 	return fmt.Errorf("texture deletion is not supported in BlessingSkin storage")
 }
 
@@ -90,8 +88,7 @@ func (s *Storage) GetTextureURL(textureType storage.TextureType, playerUUID stri
 	return s.getTextureURL(texture.Hash)
 }
 
-// IsUploadSupported BlessingSkin存储不支持材质上传
-func (s *Storage) IsUploadSupported() bool {
+// IsUploadSupported BlessingSkin存储不支持材质上�?func (s *Storage) IsUploadSupported() bool {
 	return false
 }
 
@@ -108,8 +105,7 @@ func (s *Storage) getTextureURL(hash string) string {
 		return fmt.Sprintf("%s/textures/%s", siteURL, hash)
 	}
 
-	// 最后的默认值
-	return fmt.Sprintf("https://your.website/textures/%s", hash)
+	// 最后的默认�?	return fmt.Sprintf("https://your.website/textures/%s", hash)
 }
 
 // GetTextureByHash 根据哈希获取材质（内部使用）
@@ -124,8 +120,7 @@ func (s *Storage) GetTextureByHash(hash string) (*Texture, error) {
 
 // GetPlayerTextures 获取角色的所有材质（优化版）
 func (s *Storage) GetPlayerTextures(playerUUID string) (map[storage.TextureType]*storage.TextureInfo, error) {
-	// 根据UUID获取角色名
-	playerName, err := s.uuidGen.GetNameByUUID(playerUUID)
+	// 根据UUID获取角色�?	playerName, err := s.uuidGen.GetNameByUUID(playerUUID)
 	if err != nil {
 		return nil, fmt.Errorf("player not found")
 	}
@@ -162,8 +157,7 @@ func (s *Storage) GetPlayerTextures(playerUUID string) (map[storage.TextureType]
 
 	// 处理皮肤材质
 	if result.TIDSkin > 0 && result.SkinHash != "" {
-		// 判断是否为纤细模型
-		isSlim := result.SkinType == "alex"
+		// 判断是否为纤细模�?		isSlim := result.SkinType == "alex"
 
 		textures[storage.TextureTypeSkin] = &storage.TextureInfo{
 			Type: storage.TextureTypeSkin,
@@ -172,8 +166,7 @@ func (s *Storage) GetPlayerTextures(playerUUID string) (map[storage.TextureType]
 				Hash:     result.SkinHash,
 				FileSize: int64(result.SkinSize),
 				Slim:     isSlim,
-				// UploadedAt: 需要解析时间字符串，这里简化处理
-			},
+				// UploadedAt: 需要解析时间字符串，这里简化处�?			},
 		}
 	}
 
@@ -185,8 +178,7 @@ func (s *Storage) GetPlayerTextures(playerUUID string) (map[storage.TextureType]
 			Metadata: &storage.TextureMetadata{
 				Hash:     result.CapeHash,
 				FileSize: int64(result.CapeSize),
-				// UploadedAt: 需要解析时间字符串，这里简化处理
-			},
+				// UploadedAt: 需要解析时间字符串，这里简化处�?			},
 		}
 	}
 

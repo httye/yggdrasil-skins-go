@@ -1,5 +1,4 @@
-// Package handlers 材质处理器
-package handlers
+// Package handlers 材质处理�?package handlers
 
 import (
 	"fmt"
@@ -8,19 +7,17 @@ import (
 	"strings"
 	"time"
 
-	storage "yggdrasil-api-go/src/storage/interface"
-	"yggdrasil-api-go/src/utils"
+	storage "github.com/httye/yggdrasil-skins-go/src/storage/interface"
+	"github.com/httye/yggdrasil-skins-go/src/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
-// TextureHandler 材质处理器
-type TextureHandler struct {
+// TextureHandler 材质处理�?type TextureHandler struct {
 	storage storage.Storage
 }
 
-// NewTextureHandler 创建新的材质处理器
-func NewTextureHandler(storage storage.Storage) *TextureHandler {
+// NewTextureHandler 创建新的材质处理�?func NewTextureHandler(storage storage.Storage) *TextureHandler {
 	return &TextureHandler{
 		storage: storage,
 	}
@@ -43,14 +40,12 @@ func (h *TextureHandler) UploadTexture(c *gin.Context) {
 		return
 	}
 
-	// 检查是否支持上传
-	if !h.storage.IsUploadSupported() {
+	// 检查是否支持上�?	if !h.storage.IsUploadSupported() {
 		utils.RespondError(c, 501, "NotImplemented", "Texture upload not supported")
 		return
 	}
 
-	// 获取上传的文件
-	file, _, err := c.Request.FormFile("file")
+	// 获取上传的文�?	file, _, err := c.Request.FormFile("file")
 	if err != nil {
 		utils.RespondError(c, 400, "BadRequest", "No file uploaded")
 		return
@@ -70,12 +65,10 @@ func (h *TextureHandler) UploadTexture(c *gin.Context) {
 		return
 	}
 
-	// 创建材质元数据
-	metadata := &storage.TextureMetadata{
+	// 创建材质元数�?	metadata := &storage.TextureMetadata{
 		FileSize:   int64(len(data)),
 		UploadedAt: time.Now(),
-		// Hash 将在存储层计算
-	}
+		// Hash 将在存储层计�?	}
 
 	// 上传材质
 	textureInfo, err := h.storage.UploadTexture(storageTextureType, uuid, data, metadata)
@@ -108,8 +101,7 @@ func (h *TextureHandler) UploadCape(c *gin.Context) {
 
 // uploadTexture 通用材质上传处理
 func (h *TextureHandler) uploadTexture(c *gin.Context, textureType storage.TextureType) {
-	// 检查是否支持上传
-	if !h.storage.IsUploadSupported() {
+	// 检查是否支持上�?	if !h.storage.IsUploadSupported() {
 		utils.RespondError(c, 501, "NotImplemented", "Texture upload is not supported")
 		return
 	}
@@ -127,22 +119,19 @@ func (h *TextureHandler) uploadTexture(c *gin.Context, textureType storage.Textu
 		return
 	}
 
-	// 获取上传的文件
-	file, header, err := c.Request.FormFile("file")
+	// 获取上传的文�?	file, header, err := c.Request.FormFile("file")
 	if err != nil {
 		utils.RespondError(c, 400, "BadRequest", "No file uploaded")
 		return
 	}
 	defer file.Close()
 
-	// 检查文件大小
-	if header.Size > 1024*1024 { // 1MB限制
+	// 检查文件大�?	if header.Size > 1024*1024 { // 1MB限制
 		utils.RespondError(c, 413, "PayloadTooLarge", "File too large")
 		return
 	}
 
-	// 检查文件类型
-	contentType := header.Header.Get("Content-Type")
+	// 检查文件类�?	contentType := header.Header.Get("Content-Type")
 	if !isAllowedContentType(contentType) {
 		utils.RespondError(c, 415, "UnsupportedMediaType", "Unsupported file type")
 		return
@@ -155,15 +144,13 @@ func (h *TextureHandler) uploadTexture(c *gin.Context, textureType storage.Textu
 		return
 	}
 
-	// 创建材质元数据
-	metadata := &storage.TextureMetadata{
+	// 创建材质元数�?	metadata := &storage.TextureMetadata{
 		UploadedAt: time.Now(),
 		FileSize:   header.Size,
 		Hash:       utils.CalculateHash(data),
 	}
 
-	// 如果是皮肤，检查模型类型
-	if textureType == storage.TextureTypeSkin {
+	// 如果是皮肤，检查模型类�?	if textureType == storage.TextureTypeSkin {
 		model := c.PostForm("model")
 		if model == "alex" || model == "slim" {
 			metadata.Model = model
@@ -251,8 +238,7 @@ func (h *TextureHandler) DeleteTexture(c *gin.Context) {
 	})
 }
 
-// isAllowedContentType 检查是否为允许的文件类型
-func isAllowedContentType(contentType string) bool {
+// isAllowedContentType 检查是否为允许的文件类�?func isAllowedContentType(contentType string) bool {
 	allowedTypes := []string{
 		"image/png",
 		"image/jpeg",

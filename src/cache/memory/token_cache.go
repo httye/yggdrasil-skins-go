@@ -5,14 +5,12 @@ import (
 	"fmt"
 	"sync"
 
-	"yggdrasil-api-go/src/utils"
-	"yggdrasil-api-go/src/yggdrasil"
+	"github.com/httye/yggdrasil-skins-go/src/utils"
+	"github.com/httye/yggdrasil-skins-go/src/yggdrasil"
 )
 
-// TokenCache 内存Token缓存（优化版：支持JWT优先验证）
-type TokenCache struct {
-	tokens     map[string]*yggdrasil.Token // "userID:tokenID" -> Token（简化版）
-	userTokens map[string][]string         // userID -> []tokenID
+// TokenCache 内存Token缓存（优化版：支持JWT优先验证�?type TokenCache struct {
+	tokens     map[string]*yggdrasil.Token // "userID:tokenID" -> Token（简化版�?	userTokens map[string][]string         // userID -> []tokenID
 	mu         sync.RWMutex
 }
 
@@ -29,16 +27,13 @@ func (c *TokenCache) Store(token *yggdrasil.Token) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	// 第一步：验证JWT并提取信息
-	claims, err := utils.ValidateJWT(token.AccessToken)
+	// 第一步：验证JWT并提取信�?	claims, err := utils.ValidateJWT(token.AccessToken)
 	if err != nil {
 		return fmt.Errorf("invalid JWT token: %w", err)
 	}
 
-	// 创建简化的Token对象（只存储JWT中没有的信息）
-	cacheToken := &yggdrasil.Token{
-		AccessToken: token.AccessToken, // 保留完整的AccessToken用于兼容性
-		ClientToken: token.ClientToken,
+	// 创建简化的Token对象（只存储JWT中没有的信息�?	cacheToken := &yggdrasil.Token{
+		AccessToken: token.AccessToken, // 保留完整的AccessToken用于兼容�?		ClientToken: token.ClientToken,
 		ProfileID:   claims.ProfileID, // 从JWT中获取ProfileID
 		Owner:       claims.UserID, // 从JWT中获取用户ID
 		CreatedAt:   token.CreatedAt,
@@ -49,8 +44,7 @@ func (c *TokenCache) Store(token *yggdrasil.Token) error {
 	tokenKey := fmt.Sprintf("%s:%s", claims.UserID, claims.TokenID)
 	c.tokens[tokenKey] = cacheToken
 
-	// 更新用户Token列表（使用用户ID）
-	userTokens := c.userTokens[claims.UserID]
+	// 更新用户Token列表（使用用户ID�?	userTokens := c.userTokens[claims.UserID]
 
 	// 检查是否已存在
 	found := false
@@ -68,16 +62,13 @@ func (c *TokenCache) Store(token *yggdrasil.Token) error {
 	return nil
 }
 
-// Get 获取Token（优化版：先验证JWT，按需查询缓存）
-func (c *TokenCache) Get(accessToken string) (*yggdrasil.Token, error) {
-	// 第一步：验证JWT（本地计算，极快）
-	claims, err := utils.ValidateJWT(accessToken)
+// Get 获取Token（优化版：先验证JWT，按需查询缓存�?func (c *TokenCache) Get(accessToken string) (*yggdrasil.Token, error) {
+	// 第一步：验证JWT（本地计算，极快�?	claims, err := utils.ValidateJWT(accessToken)
 	if err != nil {
 		return nil, fmt.Errorf("invalid JWT token: %w", err)
 	}
 
-	// 第二步：从缓存获取ClientToken等额外信息
-	c.mu.RLock()
+	// 第二步：从缓存获取ClientToken等额外信�?	c.mu.RLock()
 	defer c.mu.RUnlock()
 
 	tokenKey := fmt.Sprintf("%s:%s", claims.UserID, claims.TokenID)
@@ -104,11 +95,9 @@ func (c *TokenCache) Delete(accessToken string) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	// 获取Token以找到所有者
-	token, exists := c.tokens[accessToken]
+	// 获取Token以找到所有�?	token, exists := c.tokens[accessToken]
 	if exists {
-		// 从用户Token列表中移除
-		userTokens := c.userTokens[token.Owner]
+		// 从用户Token列表中移�?		userTokens := c.userTokens[token.Owner]
 		for i, userToken := range userTokens {
 			if userToken == accessToken {
 				c.userTokens[token.Owner] = append(userTokens[:i], userTokens[i+1:]...)
@@ -205,8 +194,7 @@ func (c *TokenCache) CleanupExpired() error {
 	for _, accessToken := range expiredTokens {
 		token := c.tokens[accessToken]
 
-		// 从用户Token列表中移除
-		userTokens := c.userTokens[token.Owner]
+		// 从用户Token列表中移�?		userTokens := c.userTokens[token.Owner]
 		for i, userToken := range userTokens {
 			if userToken == accessToken {
 				c.userTokens[token.Owner] = append(userTokens[:i], userTokens[i+1:]...)

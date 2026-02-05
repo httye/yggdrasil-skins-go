@@ -4,23 +4,21 @@ import (
 	"strings"
 	"time"
 
-	"yggdrasil-api-go/src/cache"
-	storage "yggdrasil-api-go/src/storage/interface"
-	"yggdrasil-api-go/src/utils"
-	"yggdrasil-api-go/src/yggdrasil"
+	"github.com/httye/yggdrasil-skins-go/src/cache"
+	storage "github.com/httye/yggdrasil-skins-go/src/storage/interface"
+	"github.com/httye/yggdrasil-skins-go/src/utils"
+	"github.com/httye/yggdrasil-skins-go/src/yggdrasil"
 
 	"github.com/gin-gonic/gin"
 )
 
-// AuthHandler 认证处理器
-type AuthHandler struct {
+// AuthHandler 认证处理�?type AuthHandler struct {
 	storage      storage.Storage
 	tokenCache   cache.TokenCache
 	sessionCache cache.SessionCache
 }
 
-// NewAuthHandler 创建新的认证处理器
-func NewAuthHandler(storage storage.Storage, tokenCache cache.TokenCache, sessionCache cache.SessionCache) *AuthHandler {
+// NewAuthHandler 创建新的认证处理�?func NewAuthHandler(storage storage.Storage, tokenCache cache.TokenCache, sessionCache cache.SessionCache) *AuthHandler {
 	return &AuthHandler{
 		storage:      storage,
 		tokenCache:   tokenCache,
@@ -42,15 +40,13 @@ func (h *AuthHandler) Authenticate(c *gin.Context) {
 		return
 	}
 
-	// 直接使用 AuthenticateUser 方法（已包含密码验证和单查询优化）
-	user, err := h.storage.AuthenticateUser(req.Username, req.Password)
+	// 直接使用 AuthenticateUser 方法（已包含密码验证和单查询优化�?	user, err := h.storage.AuthenticateUser(req.Username, req.Password)
 	if err != nil {
 		utils.RespondInvalidCredentials(c)
 		return
 	}
 
-	// 生成客户端令牌
-	clientToken := req.ClientToken
+	// 生成客户端令�?	clientToken := req.ClientToken
 	if clientToken == "" {
 		clientToken = utils.GenerateRandomUUID()
 	}
@@ -59,8 +55,7 @@ func (h *AuthHandler) Authenticate(c *gin.Context) {
 	availableProfiles := make([]yggdrasil.Profile, len(user.Profiles))
 	copy(availableProfiles, user.Profiles)
 
-	// 确定选中的角色
-	var selectedProfile *yggdrasil.Profile
+	// 确定选中的角�?	var selectedProfile *yggdrasil.Profile
 	var profileID string
 
 	// 如果用户只有一个角色，自动选择
@@ -92,8 +87,7 @@ func (h *AuthHandler) Authenticate(c *gin.Context) {
 		AccessToken: accessToken,
 		ClientToken: clientToken,
 		ProfileID:   profileID,
-		Owner:       user.ID, // 使用用户ID而不是邮箱
-		CreatedAt:   time.Now(),
+		Owner:       user.ID, // 使用用户ID而不是邮�?		CreatedAt:   time.Now(),
 		ExpiresAt:   time.Now().Add(3 * 24 * time.Hour),
 	}
 
@@ -129,15 +123,13 @@ func (h *AuthHandler) Refresh(c *gin.Context) {
 		return
 	}
 
-	// 获取并验证令牌
-	token, err := h.tokenCache.Get(req.AccessToken)
+	// 获取并验证令�?	token, err := h.tokenCache.Get(req.AccessToken)
 	if err != nil || !token.IsValid() {
 		utils.RespondInvalidToken(c)
 		return
 	}
 
-	// 验证客户端令牌（如果提供）
-	if req.ClientToken != "" && token.ClientToken != req.ClientToken {
+	// 验证客户端令牌（如果提供�?	if req.ClientToken != "" && token.ClientToken != req.ClientToken {
 		utils.RespondForbiddenOperation(c, utils.MsgTokenNotMatched)
 		return
 	}
@@ -149,8 +141,7 @@ func (h *AuthHandler) Refresh(c *gin.Context) {
 		return
 	}
 
-	// 删除旧令牌
-	h.tokenCache.Delete(req.AccessToken)
+	// 删除旧令�?	h.tokenCache.Delete(req.AccessToken)
 
 	// 确定新令牌的角色绑定
 	profileID := token.ProfileID
@@ -173,8 +164,7 @@ func (h *AuthHandler) Refresh(c *gin.Context) {
 			return
 		}
 	} else if profileID != "" {
-		// 保持原有的角色绑定
-		for _, profile := range user.Profiles {
+		// 保持原有的角色绑�?		for _, profile := range user.Profiles {
 			if profile.ID == profileID {
 				selectedProfile = &profile
 				break
@@ -189,13 +179,11 @@ func (h *AuthHandler) Refresh(c *gin.Context) {
 		return
 	}
 
-	// 存储新令牌
-	newToken := &yggdrasil.Token{
+	// 存储新令�?	newToken := &yggdrasil.Token{
 		AccessToken: newAccessToken,
 		ClientToken: token.ClientToken,
 		ProfileID:   profileID,
-		Owner:       user.ID, // 使用用户ID而不是邮箱
-		CreatedAt:   time.Now(),
+		Owner:       user.ID, // 使用用户ID而不是邮�?		CreatedAt:   time.Now(),
 		ExpiresAt:   time.Now().Add(3 * 24 * time.Hour),
 	}
 
@@ -230,20 +218,18 @@ func (h *AuthHandler) Validate(c *gin.Context) {
 		return
 	}
 
-	// 获取并验证令牌
-	token, err := h.tokenCache.Get(req.AccessToken)
+	// 获取并验证令�?	token, err := h.tokenCache.Get(req.AccessToken)
 	if err != nil || !token.IsValid() {
 		utils.RespondInvalidToken(c)
 		return
 	}
 
-	// 验证客户端令牌（如果提供）
-	if req.ClientToken != "" && token.ClientToken != req.ClientToken {
+	// 验证客户端令牌（如果提供�?	if req.ClientToken != "" && token.ClientToken != req.ClientToken {
 		utils.RespondForbiddenOperation(c, utils.MsgTokenNotMatched)
 		return
 	}
 
-	// 令牌有效，返回204
+	// 令牌有效，返�?04
 	utils.RespondNoContent(c)
 }
 
@@ -255,8 +241,7 @@ func (h *AuthHandler) Invalidate(c *gin.Context) {
 		return
 	}
 
-	// 删除令牌（无论是否存在都返回204）
-	h.tokenCache.Delete(req.AccessToken)
+	// 删除令牌（无论是否存在都返回204�?	h.tokenCache.Delete(req.AccessToken)
 	utils.RespondNoContent(c)
 }
 
@@ -275,7 +260,6 @@ func (h *AuthHandler) Signout(c *gin.Context) {
 		return
 	}
 
-	// 删除用户的所有令牌
-	h.tokenCache.DeleteUserTokens(user.ID)
+	// 删除用户的所有令�?	h.tokenCache.DeleteUserTokens(user.ID)
 	utils.RespondNoContent(c)
 }

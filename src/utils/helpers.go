@@ -32,8 +32,7 @@ func ParseInt64(s string) int64 {
 	return i
 }
 
-// ParseFloat 安全地将字符串解析为浮点数
-func ParseFloat(s string) float64 {
+// ParseFloat 安全地将字符串解析为浮点�?func ParseFloat(s string) float64 {
 	if s == "" {
 		return 0
 	}
@@ -45,8 +44,7 @@ func ParseFloat(s string) float64 {
 	return f
 }
 
-// ParseBool 安全地将字符串解析为布尔值
-func ParseBool(s string) bool {
+// ParseBool 安全地将字符串解析为布尔�?func ParseBool(s string) bool {
 	s = strings.ToLower(strings.TrimSpace(s))
 	return s == "true" || s == "1" || s == "yes" || s == "on"
 }
@@ -59,15 +57,12 @@ func TruncateString(s string, maxLen int) string {
 	return s[:maxLen]
 }
 
-// RemoveWhitespace 移除字符串中的所有空白字符
-func RemoveWhitespace(s string) string {
+// RemoveWhitespace 移除字符串中的所有空白字�?func RemoveWhitespace(s string) string {
 	return strings.ReplaceAll(s, " ", "")
 }
 
-// RemoveExtraWhitespace 移除多余的空白字符（保留单个空格）
-func RemoveExtraWhitespace(s string) string {
-	// 使用正则表达式替换多个空格为一个空格
-	re := regexp.MustCompile(`\s+`)
+// RemoveExtraWhitespace 移除多余的空白字符（保留单个空格�?func RemoveExtraWhitespace(s string) string {
+	// 使用正则表达式替换多个空格为一个空�?	re := regexp.MustCompile(`\s+`)
 	return strings.TrimSpace(re.ReplaceAllString(s, " "))
 }
 
@@ -89,8 +84,7 @@ func SanitizeFilename(filename string) string {
 	return strings.TrimSpace(filename)
 }
 
-// ContainsString 检查字符串数组是否包含指定字符串
-func ContainsString(slice []string, item string) bool {
+// ContainsString 检查字符串数组是否包含指定字符�?func ContainsString(slice []string, item string) bool {
 	for _, s := range slice {
 		if s == item {
 			return true
@@ -144,8 +138,7 @@ func SplitAndTrim(s, sep string) []string {
 	return result
 }
 
-// JoinNonEmpty 连接非空字符串
-func JoinNonEmpty(sep string, parts ...string) string {
+// JoinNonEmpty 连接非空字符�?func JoinNonEmpty(sep string, parts ...string) string {
 	nonEmpty := make([]string, 0, len(parts))
 	
 	for _, part := range parts {
@@ -180,8 +173,7 @@ func MaskEmail(email string) string {
 	return maskedLocal + "@" + domain
 }
 
-// MaskPhoneNumber 遮罩手机号（保护隐私）
-func MaskPhoneNumber(phone string) string {
+// MaskPhoneNumber 遮罩手机号（保护隐私�?func MaskPhoneNumber(phone string) string {
 	if len(phone) < 7 {
 		return "***"
 	}
@@ -198,8 +190,7 @@ func MaskQQNumber(qq string) string {
 	return qq[:1] + "****" + qq[len(qq)-2:]
 }
 
-// FormatBytes 格式化字节数（从utils/formatters.go移动过来）
-func FormatBytes(bytes int64, decimals int) string {
+// FormatBytes 格式化字节数（从utils/formatters.go移动过来�?func FormatBytes(bytes int64, decimals int) string {
 	if bytes == 0 {
 		return "0 Bytes"
 	}
