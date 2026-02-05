@@ -3,6 +3,7 @@ package utils
 import (
 	"errors"
 	"fmt"
+	"regexp"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -97,8 +98,8 @@ func IsPasswordStrong(password string) (bool, []string) {
 	return len(issues) == 0, issues
 }
 
-// CheckPasswordStrength 检查密码强度（返回分数和建议）
-func CheckPasswordStrength(password string) (score int, feedback string) {
+// ValidatePasswordStrength 验证密码强度（返回分数和建议）
+func ValidatePasswordStrength(password string) (score int, feedback string) {
 	score = 0
 	
 	// 长度加分
