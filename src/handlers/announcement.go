@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"github.com/NewNanCity/YggdrasilGo/src/models"
-	"github.com/NewNanCity/YggdrasilGo/src/utils"
+	"yggdrasil-api-go/src/models"
+	"yggdrasil-api-go/src/utils"
 )
 
 // AnnouncementHandler 公告处理器

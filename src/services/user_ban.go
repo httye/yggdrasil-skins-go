@@ -7,7 +7,7 @@ import (
 
 	"gorm.io/gorm"
 
-	"github.com/NewNanCity/YggdrasilGo/src/models"
+	"yggdrasil-api-go/src/models"
 )
 
 var (

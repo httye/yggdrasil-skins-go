@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"github.com/NewNanCity/YggdrasilGo/src/models"
-	"github.com/NewNanCity/YggdrasilGo/src/utils"
+	"yggdrasil-api-go/src/models"
+	"yggdrasil-api-go/src/utils"
 )
 
 // PermissionMiddleware 权限验证中间件

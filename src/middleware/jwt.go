@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/NewNanCity/YggdrasilGo/src/utils"
+	"yggdrasil-api-go/src/utils"
 )
 
 // JWTAuthMiddleware JWT认证中间件

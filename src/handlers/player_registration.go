@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"github.com/NewNanCity/YggdrasilGo/src/services"
-	"github.com/NewNanCity/YggdrasilGo/src/utils"
+	"yggdrasil-api-go/src/services"
+	"yggdrasil-api-go/src/utils"
 )
 
 // PlayerRegistrationHandler 游戏名注册处理器

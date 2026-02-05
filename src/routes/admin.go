@@ -4,8 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"github.com/NewNanCity/YggdrasilGo/src/handlers"
-	"github.com/NewNanCity/YggdrasilGo/src/middleware"
+	"yggdrasil-api-go/src/handlers"
+	"yggdrasil-api-go/src/middleware"
 )
 
 // SetupAdminRoutes 设置后台管理路由

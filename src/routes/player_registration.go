@@ -4,8 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"github.com/NewNanCity/YggdrasilGo/src/handlers"
-	"github.com/NewNanCity/YggdrasilGo/src/middleware"
+	"yggdrasil-api-go/src/handlers"
+	"yggdrasil-api-go/src/middleware"
 )
 
 // SetupPlayerRegistrationRoutes 设置游戏名注册路由
