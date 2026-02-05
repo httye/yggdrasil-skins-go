@@ -5,13 +5,15 @@ go 1.24.5
 require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-redis/redis/v8 v8.11.5
-	github.com/golang-jwt/jwt/v5 v5.2.1
+	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/google/uuid v1.6.0
+	github.com/spf13/viper v1.18.2
 	github.com/trim21/go-phpserialize v0.1.1
 	golang.org/x/crypto v0.28.0
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.6.0
 	gorm.io/gorm v1.30.1
+	gorm.io/plugin/dbresolver v1.5.2
 )
 
 require (
