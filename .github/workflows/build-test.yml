@@ -49,6 +49,12 @@ jobs:
       - name: 📥 Generate go.sum if needed
         run: go mod tidy
         
+      - name: 🧹 Clean Go cache
+        run: |
+          go clean -cache
+          go clean -modcache
+          echo "Go cache cleaned"
+        
       - name: 📥 Cache Go modules
         uses: actions/cache@v4
         with:
@@ -59,6 +65,7 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
+            ${{ runner.os }}-go-${{ hashFiles('go.mod') }}
 
       - name: 🔧 Fix go.sum
         run: |

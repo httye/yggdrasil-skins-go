@@ -1,5 +1,8 @@
 module github.com/httye/yggdrasil-skins-go
 
+// 注意：该模块路径在2024年2月5日从"yggdrasil-api-go"更改为"github.com/httye/yggdrasil-skins-go"
+// 请确保所有导入路径都已更新为新的模块路径
+
 go 1.24.5
 
 require (
