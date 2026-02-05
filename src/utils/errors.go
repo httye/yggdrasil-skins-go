@@ -4,7 +4,7 @@ package utils
 import (
 	"net/http"
 
-	"yggdrasil-api-go/src/yggdrasil"
+	"github.com/httye/yggdrasil-skins-go/src/yggdrasil"
 
 	"github.com/gin-gonic/gin"
 )
@@ -76,13 +76,11 @@ func RespondIllegalArgument(c *gin.Context, message string) {
 	RespondError(c, http.StatusBadRequest, ErrIllegalArgument, message)
 }
 
-// RespondNotFound 返回未找到错误
-func RespondNotFound(c *gin.Context, message string) {
+// RespondNotFound 返回未找到错�?func RespondNotFound(c *gin.Context, message string) {
 	RespondError(c, http.StatusNotFound, ErrNotFound, message)
 }
 
-// RespondUnauthorized 返回未授权错误
-func RespondUnauthorized(c *gin.Context, message string) {
+// RespondUnauthorized 返回未授权错�?func RespondUnauthorized(c *gin.Context, message string) {
 	RespondError(c, http.StatusUnauthorized, ErrUnauthorized, message)
 }
 
@@ -96,8 +94,7 @@ func RespondInvalidCredentials(c *gin.Context) {
 	RespondForbiddenOperation(c, MsgInvalidCredentials)
 }
 
-// RespondNoContent 返回无内容响应
-func RespondNoContent(c *gin.Context) {
+// RespondNoContent 返回无内容响�?func RespondNoContent(c *gin.Context) {
 	c.Status(http.StatusNoContent)
 }
 

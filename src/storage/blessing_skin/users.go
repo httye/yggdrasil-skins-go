@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	"yggdrasil-api-go/src/yggdrasil"
+	"github.com/httye/yggdrasil-skins-go/src/yggdrasil"
 
 	"golang.org/x/crypto/argon2"
 	"golang.org/x/crypto/bcrypt"
@@ -47,17 +47,14 @@ func (s *Storage) GetUserByID(userID string) (*yggdrasil.User, error) {
 	var missingUUIDs []string
 
 	for _, result := range results {
-		if result.PlayerName != "" { // 有角色
-			if result.UUID != "" {
-				// UUID已存在
-				profiles = append(profiles, yggdrasil.Profile{
+		if result.PlayerName != "" { // 有角�?			if result.UUID != "" {
+				// UUID已存�?				profiles = append(profiles, yggdrasil.Profile{
 					ID:         result.UUID,
 					Name:       result.PlayerName,
 					Properties: []yggdrasil.ProfileProperty{}, // 初始化为空数组而不是nil
 				})
 			} else {
-				// UUID缺失，需要创建
-				missingUUIDs = append(missingUUIDs, result.PlayerName)
+				// UUID缺失，需要创�?				missingUUIDs = append(missingUUIDs, result.PlayerName)
 			}
 		}
 	}
@@ -83,8 +80,7 @@ func (s *Storage) GetUserByID(userID string) (*yggdrasil.User, error) {
 	return &yggdrasil.User{
 		ID:       fmt.Sprintf("%d", userInfo.UID),
 		Email:    userInfo.Email,
-		Password: "", // 不返回密码
-		Profiles: profiles,
+		Password: "", // 不返回密�?		Profiles: profiles,
 	}, nil
 }
 
@@ -118,17 +114,14 @@ func (s *Storage) GetUserByEmail(email string) (*yggdrasil.User, error) {
 	var missingUUIDs []string
 
 	for _, result := range results {
-		if result.PlayerName != "" { // 有角色
-			if result.UUID != "" {
-				// UUID已存在
-				profiles = append(profiles, yggdrasil.Profile{
+		if result.PlayerName != "" { // 有角�?			if result.UUID != "" {
+				// UUID已存�?				profiles = append(profiles, yggdrasil.Profile{
 					ID:         result.UUID,
 					Name:       result.PlayerName,
 					Properties: []yggdrasil.ProfileProperty{}, // 初始化为空数组而不是nil
 				})
 			} else {
-				// UUID缺失，需要创建
-				missingUUIDs = append(missingUUIDs, result.PlayerName)
+				// UUID缺失，需要创�?				missingUUIDs = append(missingUUIDs, result.PlayerName)
 			}
 		}
 	}
@@ -154,13 +147,11 @@ func (s *Storage) GetUserByEmail(email string) (*yggdrasil.User, error) {
 	return &yggdrasil.User{
 		ID:       fmt.Sprintf("%d", userInfo.UID),
 		Email:    userInfo.Email,
-		Password: "", // 不返回密码
-		Profiles: profiles,
+		Password: "", // 不返回密�?		Profiles: profiles,
 	}, nil
 }
 
-// GetUserByPlayerName 根据角色名获取用户（单查询优化版）
-func (s *Storage) GetUserByPlayerName(playerName string) (*yggdrasil.User, error) {
+// GetUserByPlayerName 根据角色名获取用户（单查询优化版�?func (s *Storage) GetUserByPlayerName(playerName string) (*yggdrasil.User, error) {
 	// 一次性查询用户信息、所有角色和UUID映射
 	var results []struct {
 		UID        uint   `gorm:"column:uid"`
@@ -190,17 +181,14 @@ func (s *Storage) GetUserByPlayerName(playerName string) (*yggdrasil.User, error
 	var missingUUIDs []string
 
 	for _, result := range results {
-		if result.PlayerName != "" { // 有角色
-			if result.UUID != "" {
-				// UUID已存在
-				profiles = append(profiles, yggdrasil.Profile{
+		if result.PlayerName != "" { // 有角�?			if result.UUID != "" {
+				// UUID已存�?				profiles = append(profiles, yggdrasil.Profile{
 					ID:         result.UUID,
 					Name:       result.PlayerName,
 					Properties: []yggdrasil.ProfileProperty{}, // 初始化为空数组而不是nil
 				})
 			} else {
-				// UUID缺失，需要创建
-				missingUUIDs = append(missingUUIDs, result.PlayerName)
+				// UUID缺失，需要创�?				missingUUIDs = append(missingUUIDs, result.PlayerName)
 			}
 		}
 	}
@@ -226,8 +214,7 @@ func (s *Storage) GetUserByPlayerName(playerName string) (*yggdrasil.User, error
 	return &yggdrasil.User{
 		ID:       fmt.Sprintf("%d", userInfo.UID),
 		Email:    userInfo.Email,
-		Password: "", // 不返回密码
-		Profiles: profiles,
+		Password: "", // 不返回密�?		Profiles: profiles,
 	}, nil
 }
 
@@ -263,17 +250,14 @@ func (s *Storage) GetUserByUUID(uuid string) (*yggdrasil.User, error) {
 	var missingUUIDs []string
 
 	for _, result := range results {
-		if result.PlayerName != "" { // 有角色
-			if result.UUID != "" {
-				// UUID已存在
-				profiles = append(profiles, yggdrasil.Profile{
+		if result.PlayerName != "" { // 有角�?			if result.UUID != "" {
+				// UUID已存�?				profiles = append(profiles, yggdrasil.Profile{
 					ID:         result.UUID,
 					Name:       result.PlayerName,
 					Properties: []yggdrasil.ProfileProperty{}, // 初始化为空数组而不是nil
 				})
 			} else {
-				// UUID缺失，需要创建
-				missingUUIDs = append(missingUUIDs, result.PlayerName)
+				// UUID缺失，需要创�?				missingUUIDs = append(missingUUIDs, result.PlayerName)
 			}
 		}
 	}
@@ -299,8 +283,7 @@ func (s *Storage) GetUserByUUID(uuid string) (*yggdrasil.User, error) {
 	return &yggdrasil.User{
 		ID:       fmt.Sprintf("%d", userInfo.UID),
 		Email:    userInfo.Email,
-		Password: "", // 不返回密码
-		Profiles: profiles,
+		Password: "", // 不返回密�?		Profiles: profiles,
 	}, nil
 }
 
@@ -327,8 +310,7 @@ func (s *Storage) AuthenticateUser(username, password string) (*yggdrasil.User, 
 			Where("u.email = ?", username).
 			Find(&results).Error
 	} else {
-		// 角色名登录
-		err = s.db.Table("players p1").
+		// 角色名登�?		err = s.db.Table("players p1").
 			Select("u.uid, u.email, u.password, u.permission, u.verified, p2.name as player_name, uuid.uuid").
 			Joins("JOIN users u ON p1.uid = u.uid").
 			Joins("LEFT JOIN players p2 ON u.uid = p2.uid").
@@ -351,33 +333,27 @@ func (s *Storage) AuthenticateUser(username, password string) (*yggdrasil.User, 
 		return nil, fmt.Errorf("invalid password")
 	}
 
-	// 检查用户状态
-	if userInfo.Permission == -1 { // BANNED = -1 in BlessingSkin
+	// 检查用户状�?	if userInfo.Permission == -1 { // BANNED = -1 in BlessingSkin
 		return nil, fmt.Errorf("user is banned")
 	}
 
-	// 检查邮箱验证（如果启用）
-	if !userInfo.Verified {
+	// 检查邮箱验证（如果启用�?	if !userInfo.Verified {
 		// 这里可以根据配置决定是否要求邮箱验证
-		// 暂时允许未验证用户登录
-	}
+		// 暂时允许未验证用户登�?	}
 
 	// 构建角色列表
 	var profiles []yggdrasil.Profile
 	var missingUUIDs []string
 
 	for _, result := range results {
-		if result.PlayerName != "" { // 有角色
-			if result.UUID != "" {
-				// UUID已存在
-				profiles = append(profiles, yggdrasil.Profile{
+		if result.PlayerName != "" { // 有角�?			if result.UUID != "" {
+				// UUID已存�?				profiles = append(profiles, yggdrasil.Profile{
 					ID:         result.UUID,
 					Name:       result.PlayerName,
 					Properties: []yggdrasil.ProfileProperty{}, // 初始化为空数组而不是nil
 				})
 			} else {
-				// UUID缺失，需要创建
-				missingUUIDs = append(missingUUIDs, result.PlayerName)
+				// UUID缺失，需要创�?				missingUUIDs = append(missingUUIDs, result.PlayerName)
 			}
 		}
 	}
@@ -408,8 +384,7 @@ func (s *Storage) AuthenticateUser(username, password string) (*yggdrasil.User, 
 	}, nil
 }
 
-// verifyPassword 验证密码（BlessingSkin官方兼容密码验证）
-func (s *Storage) verifyPassword(rawPassword, hashedPassword string) bool {
+// verifyPassword 验证密码（BlessingSkin官方兼容密码验证�?func (s *Storage) verifyPassword(rawPassword, hashedPassword string) bool {
 	// 根据BlessingSkin的PWD_METHOD配置进行验证
 	switch strings.ToUpper(s.config.PwdMethod) {
 	case "BCRYPT":
@@ -453,8 +428,7 @@ func (s *Storage) verifyPassword(rawPassword, hashedPassword string) bool {
 		return hashedPassword == fmt.Sprintf("%x", saltedHash)
 
 	default:
-		// 默认使用BCRYPT（BlessingSkin默认）
-		return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(rawPassword)) == nil
+		// 默认使用BCRYPT（BlessingSkin默认�?		return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(rawPassword)) == nil
 	}
 }
 
@@ -463,8 +437,7 @@ func (s *Storage) VerifyPasswordTest(rawPassword, hashedPassword string) bool {
 	return s.verifyPassword(rawPassword, hashedPassword)
 }
 
-// SetPwdMethod 设置密码加密方法（测试用）
-func (s *Storage) SetPwdMethod(method string) {
+// SetPwdMethod 设置密码加密方法（测试用�?func (s *Storage) SetPwdMethod(method string) {
 	s.config.PwdMethod = method
 }
 
@@ -479,7 +452,7 @@ func (s *Storage) verifyArgon2i(password, hash string) bool {
 	// 解析版本
 	version := parts[2]
 	if version != "v=19" {
-		return false // 只支持版本19
+		return false // 只支持版�?9
 	}
 
 	// 解析参数 m=memory,t=time,p=threads
@@ -511,14 +484,12 @@ func (s *Storage) verifyArgon2i(password, hash string) bool {
 		}
 	}
 
-	// 解析盐值
-	salt, err := base64.RawStdEncoding.DecodeString(parts[4])
+	// 解析盐�?	salt, err := base64.RawStdEncoding.DecodeString(parts[4])
 	if err != nil {
 		return false
 	}
 
-	// 解析期望的哈希值
-	expectedHash, err := base64.RawStdEncoding.DecodeString(parts[5])
+	// 解析期望的哈希�?	expectedHash, err := base64.RawStdEncoding.DecodeString(parts[5])
 	if err != nil {
 		return false
 	}

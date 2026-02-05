@@ -1,5 +1,4 @@
-// Package blessing_skin UUID生成和管理
-package blessing_skin
+// Package blessing_skin UUID生成和管�?package blessing_skin
 
 import (
 	"crypto/md5"
@@ -12,15 +11,13 @@ import (
 	"gorm.io/gorm"
 )
 
-// UUIDGenerator UUID生成器
-type UUIDGenerator struct {
+// UUIDGenerator UUID生成�?type UUIDGenerator struct {
 	storage *Storage
 	cache   *UUIDCache
 }
 
-// NewUUIDGenerator 创建UUID生成器
-func NewUUIDGenerator(storage *Storage) *UUIDGenerator {
-	// 从配置中获取缓存大小，默认1000
+// NewUUIDGenerator 创建UUID生成�?func NewUUIDGenerator(storage *Storage) *UUIDGenerator {
+	// 从配置中获取缓存大小，默�?000
 	cacheSize := 1000
 
 	return &UUIDGenerator{
@@ -48,8 +45,7 @@ func (g *UUIDGenerator) GenerateUUID(playerName string) (string, error) {
 
 // generateUUIDV3 生成v3 UUID（离线模式兼容）
 func (g *UUIDGenerator) generateUUIDV3(name string) string {
-	// 实现与PHP版本完全相同的算法
-	// @see https://gist.github.com/games647/2b6a00a8fc21fd3b88375f03c9e2e603
+	// 实现与PHP版本完全相同的算�?	// @see https://gist.github.com/games647/2b6a00a8fc21fd3b88375f03c9e2e603
 	data := md5.Sum([]byte("OfflinePlayer:" + name))
 	data[6] = (data[6] & 0x0F) | 0x30 // 设置版本号为3
 	data[8] = (data[8] & 0x3F) | 0x80 // 设置变体
@@ -61,15 +57,13 @@ func (g *UUIDGenerator) generateUUIDV4() string {
 	return strings.ReplaceAll(uuid.New().String(), "-", "")
 }
 
-// GetOrCreateUUID 获取或创建UUID映射（带缓存）
-func (g *UUIDGenerator) GetOrCreateUUID(playerName string) (string, error) {
+// GetOrCreateUUID 获取或创建UUID映射（带缓存�?func (g *UUIDGenerator) GetOrCreateUUID(playerName string) (string, error) {
 	// 先从缓存查找
 	if uuid, found := g.cache.GetUUIDByName(playerName); found {
 		return uuid, nil
 	}
 
-	// 缓存未命中，查询数据库
-	var mapping UUIDMapping
+	// 缓存未命中，查询数据�?	var mapping UUIDMapping
 	err := g.storage.db.Where("name = ?", playerName).First(&mapping).Error
 	if err == nil {
 		// 找到映射，添加到缓存
@@ -97,21 +91,18 @@ func (g *UUIDGenerator) GetOrCreateUUID(playerName string) (string, error) {
 		return "", err
 	}
 
-	// 添加到缓存
-	g.cache.PutMapping(playerName, newUUID)
+	// 添加到缓�?	g.cache.PutMapping(playerName, newUUID)
 
 	return newUUID, nil
 }
 
-// GetUUIDByName 根据角色名获取UUID（带缓存）
-func (g *UUIDGenerator) GetUUIDByName(playerName string) (string, error) {
+// GetUUIDByName 根据角色名获取UUID（带缓存�?func (g *UUIDGenerator) GetUUIDByName(playerName string) (string, error) {
 	// 先从缓存查找
 	if uuid, found := g.cache.GetUUIDByName(playerName); found {
 		return uuid, nil
 	}
 
-	// 缓存未命中，查询数据库
-	var mapping UUIDMapping
+	// 缓存未命中，查询数据�?	var mapping UUIDMapping
 	err := g.storage.db.Where("name = ?", playerName).First(&mapping).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -120,8 +111,7 @@ func (g *UUIDGenerator) GetUUIDByName(playerName string) (string, error) {
 		return "", err
 	}
 
-	// 添加到缓存
-	g.cache.PutMapping(mapping.Name, mapping.UUID)
+	// 添加到缓�?	g.cache.PutMapping(mapping.Name, mapping.UUID)
 	return mapping.UUID, nil
 }
 
@@ -132,8 +122,7 @@ func (g *UUIDGenerator) GetNameByUUID(uuid string) (string, error) {
 		return name, nil
 	}
 
-	// 缓存未命中，查询数据库
-	var mapping UUIDMapping
+	// 缓存未命中，查询数据�?	var mapping UUIDMapping
 	err := g.storage.db.Where("uuid = ?", uuid).First(&mapping).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -142,13 +131,11 @@ func (g *UUIDGenerator) GetNameByUUID(uuid string) (string, error) {
 		return "", err
 	}
 
-	// 添加到缓存
-	g.cache.PutMapping(mapping.Name, mapping.UUID)
+	// 添加到缓�?	g.cache.PutMapping(mapping.Name, mapping.UUID)
 	return mapping.Name, nil
 }
 
-// UpdateUUIDMapping 更新UUID映射（仅在角色改名时使用）
-func (g *UUIDGenerator) UpdateUUIDMapping(oldName, newName string) error {
+// UpdateUUIDMapping 更新UUID映射（仅在角色改名时使用�?func (g *UUIDGenerator) UpdateUUIDMapping(oldName, newName string) error {
 	var mapping UUIDMapping
 	err := g.storage.db.Where("name = ?", oldName).First(&mapping).Error
 	if err != nil {
@@ -173,8 +160,7 @@ func (g *UUIDGenerator) UpdateUUIDMapping(oldName, newName string) error {
 	return g.storage.db.Save(&mapping).Error
 }
 
-// GetUUIDsByNames 批量获取UUID映射（带缓存，自动创建缺失的UUID）
-func (g *UUIDGenerator) GetUUIDsByNames(names []string) (map[string]string, error) {
+// GetUUIDsByNames 批量获取UUID映射（带缓存，自动创建缺失的UUID�?func (g *UUIDGenerator) GetUUIDsByNames(names []string) (map[string]string, error) {
 	if len(names) == 0 {
 		return make(map[string]string), nil
 	}
@@ -182,8 +168,7 @@ func (g *UUIDGenerator) GetUUIDsByNames(names []string) (map[string]string, erro
 	result := make(map[string]string)
 	var missingNames []string
 
-	// 先从缓存中查找
-	for _, name := range names {
+	// 先从缓存中查�?	for _, name := range names {
 		if uuid, found := g.cache.GetUUIDByName(name); found {
 			result[name] = uuid
 		} else {
@@ -196,8 +181,7 @@ func (g *UUIDGenerator) GetUUIDsByNames(names []string) (map[string]string, erro
 		return result, nil
 	}
 
-	// 批量查询数据库中缺失的映射
-	var mappings []UUIDMapping
+	// 批量查询数据库中缺失的映�?	var mappings []UUIDMapping
 	err := g.storage.db.Where("name IN ?", missingNames).Find(&mappings).Error
 	if err != nil {
 		return nil, err

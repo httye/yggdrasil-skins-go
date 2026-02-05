@@ -4,18 +4,16 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"yggdrasil-api-go/src/handlers"
-	"yggdrasil-api-go/src/middleware"
+	"github.com/httye/yggdrasil-skins-go/src/handlers"
+	"github.com/httye/yggdrasil-skins-go/src/middleware"
 )
 
 // SetupAdminRoutes 设置后台管理路由
 func SetupAdminRoutes(router *gin.Engine, db *gorm.DB) {
-	// 创建处理器
-	adminHandler := handlers.NewAdminHandler(db)
+	// 创建处理�?	adminHandler := handlers.NewAdminHandler(db)
 	announcementHandler := handlers.NewAnnouncementHandler(db)
 
-	// 后台管理API组
-	admin := router.Group("/api/admin")
+	// 后台管理API�?	admin := router.Group("/api/admin")
 	{
 		// 需要管理员权限验证
 		admin.Use(adminHandler.AdminAuthMiddleware())
@@ -44,14 +42,12 @@ func SetupAdminRoutes(router *gin.Engine, db *gorm.DB) {
 		admin.GET("/current-admin", adminHandler.GetCurrentAdmin)
 	}
 
-	// 公共公告API（不需要管理员权限）
-	public := router.Group("/api")
+	// 公共公告API（不需要管理员权限�?	public := router.Group("/api")
 	{
 		// 获取有效公告
 		public.GET("/announcements/active", announcementHandler.GetActiveAnnouncements)
 		// 获取公告类型
 		public.GET("/announcements/types", announcementHandler.GetAnnouncementTypes)
-		// 获取目标用户组
-		public.GET("/announcements/target-groups", announcementHandler.GetTargetGroups)
+		// 获取目标用户�?		public.GET("/announcements/target-groups", announcementHandler.GetTargetGroups)
 	}
 }

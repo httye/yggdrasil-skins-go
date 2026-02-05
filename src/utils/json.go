@@ -12,16 +12,13 @@ import (
 var (
 	responseCache = sync.Map{}
 
-	// 预序列化的API元数据（在启动时设置）
-	cachedAPIMetadata []byte
+	// 预序列化的API元数据（在启动时设置�?	cachedAPIMetadata []byte
 
-	// 预序列化的常用错误响应
-	cachedErrorResponses = make(map[string][]byte)
+	// 预序列化的常用错误响�?	cachedErrorResponses = make(map[string][]byte)
 	initOnce             sync.Once
 )
 
-// FastMarshal 高性能JSON序列化
-func FastMarshal(v interface{}) ([]byte, error) {
+// FastMarshal 高性能JSON序列�?func FastMarshal(v interface{}) ([]byte, error) {
 	return sonic.Marshal(v)
 }
 
@@ -30,13 +27,11 @@ func FastUnmarshal(data []byte, v interface{}) error {
 	return sonic.Unmarshal(data, v)
 }
 
-// FastMarshalString 高性能JSON序列化为字符串
-func FastMarshalString(v interface{}) (string, error) {
+// FastMarshalString 高性能JSON序列化为字符�?func FastMarshalString(v interface{}) (string, error) {
 	return sonic.MarshalString(v)
 }
 
-// FastUnmarshalString 高性能JSON字符串反序列化
-func FastUnmarshalString(data string, v interface{}) error {
+// FastUnmarshalString 高性能JSON字符串反序列�?func FastUnmarshalString(data string, v interface{}) error {
 	return sonic.UnmarshalString(data, v)
 }
 
@@ -53,37 +48,31 @@ func RespondJSONFast(c *gin.Context, data interface{}) {
 	}
 }
 
-// GetCachedResponse 获取缓存的响应
-func GetCachedResponse(key string) ([]byte, bool) {
+// GetCachedResponse 获取缓存的响�?func GetCachedResponse(key string) ([]byte, bool) {
 	if cached, ok := responseCache.Load(key); ok {
 		return cached.([]byte), true
 	}
 	return nil, false
 }
 
-// SetCachedResponse 设置缓存的响应
-func SetCachedResponse(key string, data []byte) {
+// SetCachedResponse 设置缓存的响�?func SetCachedResponse(key string, data []byte) {
 	responseCache.Store(key, data)
 }
 
-// GetCachedAPIMetadata 获取缓存的API元数据
-func GetCachedAPIMetadata() []byte {
+// GetCachedAPIMetadata 获取缓存的API元数�?func GetCachedAPIMetadata() []byte {
 	return cachedAPIMetadata
 }
 
-// SetCachedAPIMetadata 设置缓存的API元数据
-func SetCachedAPIMetadata(data []byte) {
+// SetCachedAPIMetadata 设置缓存的API元数�?func SetCachedAPIMetadata(data []byte) {
 	cachedAPIMetadata = data
 }
 
-// GetCachedErrorResponse 获取缓存的错误响应
-func GetCachedErrorResponse(errorType string) []byte {
+// GetCachedErrorResponse 获取缓存的错误响�?func GetCachedErrorResponse(errorType string) []byte {
 	initErrorResponses()
 	return cachedErrorResponses[errorType]
 }
 
-// initErrorResponses 初始化常用错误响应缓存
-func initErrorResponses() {
+// initErrorResponses 初始化常用错误响应缓�?func initErrorResponses() {
 	initOnce.Do(func() {
 		// 预序列化常用错误响应
 		errorResponses := map[string]interface{}{
@@ -117,13 +106,11 @@ func initErrorResponses() {
 	})
 }
 
-// RespondCachedError 返回缓存的错误响应
-func RespondCachedError(c *gin.Context, statusCode int, errorType string) {
+// RespondCachedError 返回缓存的错误响�?func RespondCachedError(c *gin.Context, statusCode int, errorType string) {
 	if cachedResponse := GetCachedErrorResponse(errorType); cachedResponse != nil {
 		c.Data(statusCode, "application/json", cachedResponse)
 	} else {
-		// 降级到标准错误响应
-		RespondError(c, statusCode, errorType, "Unknown error")
+		// 降级到标准错误响�?		RespondError(c, statusCode, errorType, "Unknown error")
 	}
 }
 
@@ -132,13 +119,11 @@ func InitErrorResponseCache() {
 	initErrorResponses()
 }
 
-// RespondCachedAPIMetadata 返回缓存的API元数据
-func RespondCachedAPIMetadata(c *gin.Context) {
+// RespondCachedAPIMetadata 返回缓存的API元数�?func RespondCachedAPIMetadata(c *gin.Context) {
 	if cachedAPIMetadata != nil {
 		c.Data(200, "application/json", cachedAPIMetadata)
 	} else {
-		// 降级到动态生成
-		errorResp := gin.H{"error": "API metadata not cached"}
+		// 降级到动态生�?		errorResp := gin.H{"error": "API metadata not cached"}
 		if jsonData, err := FastMarshal(errorResp); err == nil {
 			c.Data(200, "application/json", jsonData)
 		} else {

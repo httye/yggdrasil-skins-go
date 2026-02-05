@@ -4,10 +4,10 @@ package cache
 import (
 	"fmt"
 
-	"yggdrasil-api-go/src/cache/database"
-	"yggdrasil-api-go/src/cache/file"
-	"yggdrasil-api-go/src/cache/memory"
-	"yggdrasil-api-go/src/cache/redis"
+	"github.com/httye/yggdrasil-skins-go/src/cache/database"
+	"github.com/httye/yggdrasil-skins-go/src/cache/file"
+	"github.com/httye/yggdrasil-skins-go/src/cache/memory"
+	"github.com/httye/yggdrasil-skins-go/src/cache/redis"
 )
 
 // DefaultCacheFactory 默认缓存工厂
@@ -50,7 +50,6 @@ func (f *DefaultCacheFactory) CreateSessionCache(cacheType string, options map[s
 	}
 }
 
-// GetSupportedTypes 获取支持的缓存类型
-func (f *DefaultCacheFactory) GetSupportedTypes() []string {
+// GetSupportedTypes 获取支持的缓存类�?func (f *DefaultCacheFactory) GetSupportedTypes() []string {
 	return []string{"memory", "redis", "file", "database"}
 }

@@ -14,7 +14,7 @@ func HashPassword(password string) (string, error) {
 		return "", errors.New("password cannot be empty")
 	}
 	
-	// 使用bcrypt生成密码哈希，cost为10
+	// 使用bcrypt生成密码哈希，cost�?0
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", fmt.Errorf("failed to hash password: %w", err)
@@ -32,12 +32,10 @@ func VerifyPassword(hashedPassword, password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
 
-// IsPasswordStrong 检查密码强度
-func IsPasswordStrong(password string) (bool, []string) {
+// IsPasswordStrong 检查密码强�?func IsPasswordStrong(password string) (bool, []string) {
 	var issues []string
 	
-	// 长度检查
-	if len(password) < 8 {
+	// 长度检�?	if len(password) < 8 {
 		issues = append(issues, "Password must be at least 8 characters long")
 	}
 	
@@ -98,8 +96,7 @@ func IsPasswordStrong(password string) (bool, []string) {
 	return len(issues) == 0, issues
 }
 
-// ValidatePasswordStrength 验证密码强度（返回分数和建议）
-func ValidatePasswordStrength(password string) (score int, feedback string) {
+// ValidatePasswordStrength 验证密码强度（返回分数和建议�?func ValidatePasswordStrength(password string) (score int, feedback string) {
 	score = 0
 	
 	// 长度加分
@@ -110,8 +107,7 @@ func ValidatePasswordStrength(password string) (score int, feedback string) {
 		score += 1
 	}
 	
-	// 复杂度加分
-	if regexp.MustCompile(`[a-z]`).MatchString(password) {
+	// 复杂度加�?	if regexp.MustCompile(`[a-z]`).MatchString(password) {
 		score += 1
 	}
 	if regexp.MustCompile(`[A-Z]`).MatchString(password) {
@@ -127,11 +123,11 @@ func ValidatePasswordStrength(password string) (score int, feedback string) {
 	// 生成反馈
 	switch score {
 	case 0, 1:
-		feedback = "密码强度很弱，建议增加长度和复杂度"
+		feedback = "密码强度很弱，建议增加长度和复杂�?
 	case 2, 3:
 		feedback = "密码强度较弱，建议增加大小写字母、数字或特殊字符"
 	case 4, 5:
-		feedback = "密码强度中等，可以继续增强"
+		feedback = "密码强度中等，可以继续增�?
 	case 6, 7:
 		feedback = "密码强度较强"
 	default:

@@ -7,12 +7,11 @@ import (
 
 	"gorm.io/gorm"
 
-	"yggdrasil-api-go/src/models"
+	"github.com/httye/yggdrasil-skins-go/src/models"
 )
 
 var (
-	// ErrUserNotFound 用户未找到错误
-	ErrUserNotFound = errors.New("user not found")
+	// ErrUserNotFound 用户未找到错�?	ErrUserNotFound = errors.New("user not found")
 	// ErrUserAlreadyBanned 用户已被封禁错误
 	ErrUserAlreadyBanned = errors.New("user is already banned")
 	// ErrUserNotBanned 用户未被封禁错误
@@ -42,13 +41,11 @@ func (s *UserBanService) BanUser(targetUserUUID, adminUUID, reason string) error
 		return fmt.Errorf("failed to find target user: %w", err)
 	}
 
-	// 检查是否已被封禁
-	if targetUser.IsBanned {
+	// 检查是否已被封�?	if targetUser.IsBanned {
 		return ErrUserAlreadyBanned
 	}
 
-	// 获取管理员信息
-	var admin models.EnhancedUser
+	// 获取管理员信�?	var admin models.EnhancedUser
 	if err := s.db.Where("uuid = ?", adminUUID).First(&admin).Error; err != nil {
 		return fmt.Errorf("failed to find admin user: %w", err)
 	}
@@ -69,8 +66,7 @@ func (s *UserBanService) BanUser(targetUserUUID, adminUUID, reason string) error
 		return fmt.Errorf("failed to ban user: %w", err)
 	}
 
-	// 记录管理员操作日志
-	logEntry := models.AdminLog{
+	// 记录管理员操作日�?	logEntry := models.AdminLog{
 		AdminUUID:      adminUUID,
 		Action:         "ban_user",
 		TargetUserUUID: &targetUserUUID,
@@ -81,8 +77,7 @@ func (s *UserBanService) BanUser(targetUserUUID, adminUUID, reason string) error
 		},
 	}
 	if err := s.db.Create(&logEntry).Error; err != nil {
-		// 记录日志失败，但不影响封禁操作
-		fmt.Printf("Failed to log ban action: %v\n", err)
+		// 记录日志失败，但不影响封禁操�?		fmt.Printf("Failed to log ban action: %v\n", err)
 	}
 
 	return nil
@@ -104,8 +99,7 @@ func (s *UserBanService) UnbanUser(targetUserUUID, adminUUID string) error {
 		return ErrUserNotBanned
 	}
 
-	// 获取管理员信息
-	var admin models.EnhancedUser
+	// 获取管理员信�?	var admin models.EnhancedUser
 	if err := s.db.Where("uuid = ?", adminUUID).First(&admin).Error; err != nil {
 		return fmt.Errorf("failed to find admin user: %w", err)
 	}
@@ -129,8 +123,7 @@ func (s *UserBanService) UnbanUser(targetUserUUID, adminUUID string) error {
 		return fmt.Errorf("failed to unban user: %w", err)
 	}
 
-	// 记录管理员操作日志
-	logEntry := models.AdminLog{
+	// 记录管理员操作日�?	logEntry := models.AdminLog{
 		AdminUUID:      adminUUID,
 		Action:         "unban_user",
 		TargetUserUUID: &targetUserUUID,
@@ -141,8 +134,7 @@ func (s *UserBanService) UnbanUser(targetUserUUID, adminUUID string) error {
 		},
 	}
 	if err := s.db.Create(&logEntry).Error; err != nil {
-		// 记录日志失败，但不影响解封操作
-		fmt.Printf("Failed to log unban action: %v\n", err)
+		// 记录日志失败，但不影响解封操�?		fmt.Printf("Failed to log unban action: %v\n", err)
 	}
 
 	return nil
@@ -174,8 +166,7 @@ func (s *UserBanService) GetBannedUserInfo(userUUID string) (*models.EnhancedUse
 	return &user, nil
 }
 
-// GetBannedUsers 获取所有被封禁的用户列表
-func (s *UserBanService) GetBannedUsers(limit, offset int) ([]models.EnhancedUser, int64, error) {
+// GetBannedUsers 获取所有被封禁的用户列�?func (s *UserBanService) GetBannedUsers(limit, offset int) ([]models.EnhancedUser, int64, error) {
 	var users []models.EnhancedUser
 	var total int64
 
@@ -198,8 +189,7 @@ func (s *UserBanService) GetBannedUsers(limit, offset int) ([]models.EnhancedUse
 	return users, total, nil
 }
 
-// GetBanHistory 获取用户的封禁历史（从操作日志中获取）
-func (s *UserBanService) GetBanHistory(userUUID string, limit int) ([]models.AdminLog, error) {
+// GetBanHistory 获取用户的封禁历史（从操作日志中获取�?func (s *UserBanService) GetBanHistory(userUUID string, limit int) ([]models.AdminLog, error) {
 	var logs []models.AdminLog
 	err := s.db.Where("target_user_uuid = ? AND action IN (?, ?)", 
 		userUUID, "ban_user", "unban_user").
@@ -212,8 +202,7 @@ func (s *UserBanService) GetBanHistory(userUUID string, limit int) ([]models.Adm
 	return logs, nil
 }
 
-// ResetUserPassword 管理员重置用户密码
-func (s *UserBanService) ResetUserPassword(targetUserUUID, adminUUID, newPassword string) error {
+// ResetUserPassword 管理员重置用户密�?func (s *UserBanService) ResetUserPassword(targetUserUUID, adminUUID, newPassword string) error {
 	// 获取目标用户信息
 	var targetUser models.EnhancedUser
 	if err := s.db.Where("uuid = ?", targetUserUUID).First(&targetUser).Error; err != nil {
@@ -223,8 +212,7 @@ func (s *UserBanService) ResetUserPassword(targetUserUUID, adminUUID, newPasswor
 		return fmt.Errorf("failed to find target user: %w", err)
 	}
 
-	// 获取管理员信息
-	var admin models.EnhancedUser
+	// 获取管理员信�?	var admin models.EnhancedUser
 	if err := s.db.Where("uuid = ?", adminUUID).First(&admin).Error; err != nil {
 		return fmt.Errorf("failed to find admin user: %w", err)
 	}
@@ -234,15 +222,13 @@ func (s *UserBanService) ResetUserPassword(targetUserUUID, adminUUID, newPasswor
 		return ErrInsufficientPrivileges
 	}
 
-	// 这里应该使用密码加密服务，简化处理
-	targetUser.Password = newPassword // 实际应该加密
+	// 这里应该使用密码加密服务，简化处�?	targetUser.Password = newPassword // 实际应该加密
 
 	if err := s.db.Save(&targetUser).Error; err != nil {
 		return fmt.Errorf("failed to reset password: %w", err)
 	}
 
-	// 记录管理员操作日志
-	logEntry := models.AdminLog{
+	// 记录管理员操作日�?	logEntry := models.AdminLog{
 		AdminUUID:      adminUUID,
 		Action:         "reset_user_password",
 		TargetUserUUID: &targetUserUUID,
@@ -268,8 +254,7 @@ func (s *UserBanService) UpdateUserMaxProfiles(targetUserUUID, adminUUID string,
 		return fmt.Errorf("failed to find target user: %w", err)
 	}
 
-	// 获取管理员信息
-	var admin models.EnhancedUser
+	// 获取管理员信�?	var admin models.EnhancedUser
 	if err := s.db.Where("uuid = ?", adminUUID).First(&admin).Error; err != nil {
 		return fmt.Errorf("failed to find admin user: %w", err)
 	}
@@ -279,8 +264,7 @@ func (s *UserBanService) UpdateUserMaxProfiles(targetUserUUID, adminUUID string,
 		return ErrInsufficientPrivileges
 	}
 
-	// 保存之前的值用于日志
-	previousMax := targetUser.MaxProfiles
+	// 保存之前的值用于日�?	previousMax := targetUser.MaxProfiles
 
 	// 更新角色数量限制
 	targetUser.MaxProfiles = maxProfiles
@@ -288,8 +272,7 @@ func (s *UserBanService) UpdateUserMaxProfiles(targetUserUUID, adminUUID string,
 		return fmt.Errorf("failed to update max profiles: %w", err)
 	}
 
-	// 记录管理员操作日志
-	logEntry := models.AdminLog{
+	// 记录管理员操作日�?	logEntry := models.AdminLog{
 		AdminUUID:      adminUUID,
 		Action:         "update_user_max_profiles",
 		TargetUserUUID: &targetUserUUID,
@@ -329,14 +312,12 @@ func (s *UserBanService) GetUserManagementStats() (map[string]interface{}, error
 		return nil, fmt.Errorf("failed to count admin users: %w", err)
 	}
 
-	// 获取最新注册用户
-	err = s.db.Order("created_at DESC").First(&newestUser).Error
+	// 获取最新注册用�?	err = s.db.Order("created_at DESC").First(&newestUser).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, fmt.Errorf("failed to get newest user: %w", err)
 	}
 
-	// 获取今日注册用户数
-	var todayUsers int64
+	// 获取今日注册用户�?	var todayUsers int64
 	today := time.Now().Truncate(24 * time.Hour)
 	err = s.db.Model(&models.EnhancedUser{}).Where("created_at >= ?", today).Count(&todayUsers).Error
 	if err != nil {

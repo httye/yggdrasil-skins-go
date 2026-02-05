@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"yggdrasil-api-go/src/yggdrasil"
+	"github.com/httye/yggdrasil-skins-go/src/yggdrasil"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
@@ -15,26 +15,20 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-// CacheSession 数据库缓存Session表结构（优化设计）
-type CacheSession struct {
+// CacheSession 数据库缓存Session表结构（优化设计�?type CacheSession struct {
 	// 主键：服务器ID
 	ServerID string `gorm:"primaryKey;column:server_id;size:255" json:"server_id"` // 服务器ID
 
-	// Session信息（只存储必要信息）
-	ClientIP    string `gorm:"size:45;column:client_ip;not null" json:"client_ip"`                          // 客户端IP
-	AccessToken string `gorm:"size:512;column:access_token;not null;default:''" json:"access_token"` // AccessToken（验证用）
-	ProfileID   string `gorm:"size:50;column:profile_id;not null;default:''" json:"profile_id"`                         // 角色ID（冗余字段，暂不使用）
-
+	// Session信息（只存储必要信息�?	ClientIP    string `gorm:"size:45;column:client_ip;not null" json:"client_ip"`                          // 客户端IP
+	AccessToken string `gorm:"size:512;column:access_token;not null;default:''" json:"access_token"` // AccessToken（验证用�?	ProfileID   string `gorm:"size:50;column:profile_id;not null;default:''" json:"profile_id"`                         // 角色ID（冗余字段，暂不使用�?
 	// 时间信息
 	CreatedAt time.Time `gorm:"column:created_at;not null" json:"created_at"`
 	ExpiresAt time.Time `gorm:"index;column:expires_at;not null" json:"expires_at"`
 
-	// 用于动态表名
-	tablePrefix string `gorm:"-"`
+	// 用于动态表�?	tablePrefix string `gorm:"-"`
 }
 
-// TableName 指定表名（支持前缀）
-func (cs CacheSession) TableName() string {
+// TableName 指定表名（支持前缀�?func (cs CacheSession) TableName() string {
 	if cs.tablePrefix != "" {
 		return cs.tablePrefix + "sessions"
 	}
@@ -67,18 +61,15 @@ func NewSessionCache(options map[string]any) (*SessionCache, error) {
 		logLevel = logger.Info
 	}
 
-	// 根据DSN自动选择数据库驱动
-	var db *gorm.DB
+	// 根据DSN自动选择数据库驱�?	var db *gorm.DB
 	var err error
 
 	if strings.HasPrefix(dsn, "file:") || strings.HasSuffix(dsn, ".db") {
-		// SQLite数据库
-		db, err = gorm.Open(sqlite.Open(dsn), &gorm.Config{
+		// SQLite数据�?		db, err = gorm.Open(sqlite.Open(dsn), &gorm.Config{
 			Logger: logger.Default.LogMode(logLevel),
 		})
 	} else {
-		// MySQL数据库
-		db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+		// MySQL数据�?		db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 			Logger: logger.Default.LogMode(logLevel),
 		})
 	}
@@ -121,8 +112,7 @@ func (c *SessionCache) Store(serverID string, session *yggdrasil.Session) error 
 	// Session默认30秒过期（与Yggdrasil标准一致）
 	expiresAt := time.Now().Add(30 * time.Second)
 
-	// 存储到数据库（只存储必要信息，不存储AccessToken和ProfileID）
-	cacheSession := c.newCacheSession()
+	// 存储到数据库（只存储必要信息，不存储AccessToken和ProfileID�?	cacheSession := c.newCacheSession()
 	cacheSession.ServerID = serverID
 	cacheSession.AccessToken = session.AccessToken
 	cacheSession.ProfileID = session.ProfileID
@@ -139,8 +129,7 @@ func (c *SessionCache) Store(serverID string, session *yggdrasil.Session) error 
 	return nil
 }
 
-// Get 获取Session（优化版：直接从数据库字段构建Session对象）
-func (c *SessionCache) Get(serverID string) (*yggdrasil.Session, error) {
+// Get 获取Session（优化版：直接从数据库字段构建Session对象�?func (c *SessionCache) Get(serverID string) (*yggdrasil.Session, error) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 
@@ -165,8 +154,7 @@ func (c *SessionCache) Get(serverID string) (*yggdrasil.Session, error) {
 	return session, nil
 }
 
-// Delete 删除Session（优化版：直接按ServerID删除）
-func (c *SessionCache) Delete(serverID string) error {
+// Delete 删除Session（优化版：直接按ServerID删除�?func (c *SessionCache) Delete(serverID string) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 

@@ -53,15 +53,14 @@ type DatabaseStorageOptions struct {
 
 // BlessingSkinStorageOptions BlessingSkin存储选项
 type BlessingSkinStorageOptions struct {
-	DatabaseDSN            string               `yaml:"database_dsn"`              // MySQL连接字符串
-	Debug                  bool                 `yaml:"debug"`                     // 调试模式
+	DatabaseDSN            string               `yaml:"database_dsn"`              // MySQL连接字符�?	Debug                  bool                 `yaml:"debug"`                     // 调试模式
 	TextureBaseURLOverride bool                 `yaml:"texture_base_url_override"` // 为true时使用配置文件的texture.base_url而不是options中的site_url
 	Security               BlessingSkinSecurity `yaml:"security"`                  // 安全配置
 }
 
 // BlessingSkinSecurity BlessingSkin安全配置
 type BlessingSkinSecurity struct {
-	Salt      string `yaml:"salt"`       // 密码加密盐值 (对应BlessingSkin的SALT)
+	Salt      string `yaml:"salt"`       // 密码加密盐�?(对应BlessingSkin的SALT)
 	PwdMethod string `yaml:"pwd_method"` // 密码加密方法 (对应BlessingSkin的PWD_METHOD)
 	AppKey    string `yaml:"app_key"`    // 应用密钥 (对应BlessingSkin的APP_KEY)
 }
@@ -83,8 +82,7 @@ type CacheBackendConfig struct {
 // ResponseCacheConfig 响应缓存配置
 type ResponseCacheConfig struct {
 	Enabled          bool          `yaml:"enabled"`           // 是否启用响应缓存
-	APIMetadata      bool          `yaml:"api_metadata"`      // 是否缓存API元数据
-	ErrorResponses   bool          `yaml:"error_responses"`   // 是否缓存错误响应
+	APIMetadata      bool          `yaml:"api_metadata"`      // 是否缓存API元数�?	ErrorResponses   bool          `yaml:"error_responses"`   // 是否缓存错误响应
 	ProfileResponses bool          `yaml:"profile_responses"` // 是否缓存角色响应
 	CacheDuration    time.Duration `yaml:"cache_duration"`    // 缓存持续时间
 	MaxCacheSize     int           `yaml:"max_cache_size"`    // 最大缓存条目数
@@ -102,12 +100,9 @@ type UserCacheConfig struct {
 type TextureConfig struct {
 	BaseURL       string   `yaml:"base_url"`       // 材质基础URL
 	UploadEnabled bool     `yaml:"upload_enabled"` // 是否启用上传
-	MaxFileSize   int64    `yaml:"max_file_size"`  // 最大文件大小（字节）
-	AllowedTypes  []string `yaml:"allowed_types"`  // 允许的文件类型
-}
+	MaxFileSize   int64    `yaml:"max_file_size"`  // 最大文件大小（字节�?	AllowedTypes  []string `yaml:"allowed_types"`  // 允许的文件类�?}
 
-// MiddlewareConfig 中间件配置
-type MiddlewareConfig struct {
+// MiddlewareConfig 中间件配�?type MiddlewareConfig struct {
 	CORS        CORSConfig        `yaml:"cors"`        // CORS配置
 	RateLimit   RateLimitConfig   `yaml:"rate_limit"`  // 速率限制配置
 	Performance PerformanceConfig `yaml:"performance"` // 性能监控配置
@@ -117,10 +112,7 @@ type MiddlewareConfig struct {
 type CORSConfig struct {
 	Enabled          bool     `yaml:"enabled"`           // 是否启用CORS
 	AllowedOrigins   []string `yaml:"allowed_origins"`   // 允许的源
-	AllowedMethods   []string `yaml:"allowed_methods"`   // 允许的方法
-	AllowedHeaders   []string `yaml:"allowed_headers"`   // 允许的头部
-	ExposedHeaders   []string `yaml:"exposed_headers"`   // 暴露的头部
-	AllowCredentials bool     `yaml:"allow_credentials"` // 是否允许凭证
+	AllowedMethods   []string `yaml:"allowed_methods"`   // 允许的方�?	AllowedHeaders   []string `yaml:"allowed_headers"`   // 允许的头�?	ExposedHeaders   []string `yaml:"exposed_headers"`   // 暴露的头�?	AllowCredentials bool     `yaml:"allow_credentials"` // 是否允许凭证
 	MaxAge           int      `yaml:"max_age"`           // 预检请求缓存时间
 }
 
@@ -128,8 +120,7 @@ type CORSConfig struct {
 type RateLimitConfig struct {
 	Enabled      bool          `yaml:"enabled"`       // 是否启用速率限制
 	AuthInterval time.Duration `yaml:"auth_interval"` // 认证请求间隔
-	GlobalLimit  int           `yaml:"global_limit"`  // 全局请求限制（每分钟）
-	BurstLimit   int           `yaml:"burst_limit"`   // 突发请求限制
+	GlobalLimit  int           `yaml:"global_limit"`  // 全局请求限制（每分钟�?	BurstLimit   int           `yaml:"burst_limit"`   // 突发请求限制
 }
 
 // PerformanceConfig 性能监控配置
@@ -144,25 +135,20 @@ type LoggingConfig struct {
 	Format     string `yaml:"format"`      // 日志格式：text, json
 	Output     string `yaml:"output"`      // 输出目标：stdout, stderr, file
 	File       string `yaml:"file"`        // 日志文件路径（当output为file时）
-	MaxSize    int    `yaml:"max_size"`    // 日志文件最大大小（MB）
-	MaxBackups int    `yaml:"max_backups"` // 保留的日志文件数量
-	MaxAge     int    `yaml:"max_age"`     // 日志文件保留天数
-	Compress   bool   `yaml:"compress"`    // 是否压缩旧日志文件
-}
+	MaxSize    int    `yaml:"max_size"`    // 日志文件最大大小（MB�?	MaxBackups int    `yaml:"max_backups"` // 保留的日志文件数�?	MaxAge     int    `yaml:"max_age"`     // 日志文件保留天数
+	Compress   bool   `yaml:"compress"`    // 是否压缩旧日志文�?}
 
 // MonitoringConfig 监控配置
 type MonitoringConfig struct {
 	Enabled         bool   `yaml:"enabled"`          // 是否启用监控
 	MetricsEndpoint string `yaml:"metrics_endpoint"` // 监控端点路径
 	CacheStats      bool   `yaml:"cache_stats"`      // 是否启用缓存统计
-	DBStats         bool   `yaml:"db_stats"`         // 是否启用数据库统计
-	SystemStats     bool   `yaml:"system_stats"`     // 是否启用系统统计
+	DBStats         bool   `yaml:"db_stats"`         // 是否启用数据库统�?	SystemStats     bool   `yaml:"system_stats"`     // 是否启用系统统计
 }
 
 // SecurityConfig 安全配置
 type SecurityConfig struct {
-	MaxRequestSize string        `yaml:"max_request_size"` // 最大请求大小
-	ReadTimeout    time.Duration `yaml:"read_timeout"`     // 读取超时
+	MaxRequestSize string        `yaml:"max_request_size"` // 最大请求大�?	ReadTimeout    time.Duration `yaml:"read_timeout"`     // 读取超时
 	WriteTimeout   time.Duration `yaml:"write_timeout"`    // 写入超时
 	IdleTimeout    time.Duration `yaml:"idle_timeout"`     // 空闲超时
 }
@@ -170,15 +156,13 @@ type SecurityConfig struct {
 // WarmupConfig 预热配置
 type WarmupConfig struct {
 	Enabled       bool `yaml:"enabled"`        // 是否启用预热
-	APIMetadata   bool `yaml:"api_metadata"`   // 是否预热API元数据
-	ErrorCache    bool `yaml:"error_cache"`    // 是否预热错误缓存
+	APIMetadata   bool `yaml:"api_metadata"`   // 是否预热API元数�?	ErrorCache    bool `yaml:"error_cache"`    // 是否预热错误缓存
 	UUIDCache     bool `yaml:"uuid_cache"`     // 是否预热UUID缓存
 	ProfileCache  bool `yaml:"profile_cache"`  // 是否预热角色缓存
 	ConcurrentNum int  `yaml:"concurrent_num"` // 并发预热数量
 }
 
-// ServerConfig 服务器配置
-type ServerConfig struct {
+// ServerConfig 服务器配�?type ServerConfig struct {
 	Host    string `yaml:"host"`     // 监听地址
 	Port    int    `yaml:"port"`     // 监听端口
 	Debug   bool   `yaml:"debug"`    // 调试模式
@@ -189,9 +173,7 @@ type ServerConfig struct {
 type AuthConfig struct {
 	TokenExpiration     time.Duration `yaml:"token_expiration"`     // 令牌过期时间
 	JWTSecret           string        `yaml:"jwt_secret"`           // JWT密钥
-	TokensLimit         int           `yaml:"tokens_limit"`         // 每用户令牌数量限制
-	RequireVerification bool          `yaml:"require_verification"` // 是否需要邮箱验证
-}
+	TokensLimit         int           `yaml:"tokens_limit"`         // 每用户令牌数量限�?	RequireVerification bool          `yaml:"require_verification"` // 是否需要邮箱验�?}
 
 // RateConfig 速率限制配置
 type RateConfig struct {
@@ -201,16 +183,12 @@ type RateConfig struct {
 
 // YggdrasilConfig Yggdrasil相关配置
 type YggdrasilConfig struct {
-	Meta        MetaConfig     `yaml:"meta"`         // 元数据配置
-	SkinDomains []string       `yaml:"skin_domains"` // 皮肤域名白名单
-	Keys        KeysConfig     `yaml:"keys"`         // 密钥配置
+	Meta        MetaConfig     `yaml:"meta"`         // 元数据配�?	SkinDomains []string       `yaml:"skin_domains"` // 皮肤域名白名�?	Keys        KeysConfig     `yaml:"keys"`         // 密钥配置
 	Features    FeaturesConfig `yaml:"features"`     // 功能配置
 }
 
-// MetaConfig 元数据配置
-type MetaConfig struct {
-	ServerName            string            `yaml:"server_name"`            // 服务器名称
-	ImplementationName    string            `yaml:"implementation_name"`    // 实现名称
+// MetaConfig 元数据配�?type MetaConfig struct {
+	ServerName            string            `yaml:"server_name"`            // 服务器名�?	ImplementationName    string            `yaml:"implementation_name"`    // 实现名称
 	ImplementationVersion string            `yaml:"implementation_version"` // 实现版本
 	Links                 map[string]string `yaml:"links"`                  // 相关链接
 }
@@ -223,11 +201,9 @@ type KeysConfig struct {
 
 // FeaturesConfig 功能配置
 type FeaturesConfig struct {
-	NonEmailLogin bool `yaml:"non_email_login"` // 支持非邮箱登录
-}
+	NonEmailLogin bool `yaml:"non_email_login"` // 支持非邮箱登�?}
 
-// LoadConfig 从文件加载配置
-func LoadConfig(filename string) (*Config, error) {
+// LoadConfig 从文件加载配�?func LoadConfig(filename string) (*Config, error) {
 	// 如果配置文件不存在，创建默认配置文件
 	if _, err := os.Stat(filename); os.IsNotExist(err) {
 		defaultConfig := DefaultConfig()
@@ -257,8 +233,7 @@ func LoadConfig(filename string) (*Config, error) {
 	return &config, nil
 }
 
-// SaveConfig 保存配置到文件
-func SaveConfig(config *Config, filename string) error {
+// SaveConfig 保存配置到文�?func SaveConfig(config *Config, filename string) error {
 	data, err := yaml.Marshal(config)
 	if err != nil {
 		return fmt.Errorf("failed to marshal config: %w", err)
@@ -273,8 +248,7 @@ func SaveConfig(config *Config, filename string) error {
 
 // Validate 验证配置
 func (c *Config) Validate() error {
-	// 验证服务器配置
-	if c.Server.Port <= 0 || c.Server.Port > 65535 {
+	// 验证服务器配�?	if c.Server.Port <= 0 || c.Server.Port > 65535 {
 		return fmt.Errorf("invalid server port: %d", c.Server.Port)
 	}
 
@@ -283,8 +257,7 @@ func (c *Config) Validate() error {
 		if !strings.HasPrefix(c.Server.BaseURL, "/") {
 			return fmt.Errorf("base_url must start with '/', got: %s", c.Server.BaseURL)
 		}
-		// 去除末尾的斜杠（除非是根路径）
-		if c.Server.BaseURL != "/" && strings.HasSuffix(c.Server.BaseURL, "/") {
+		// 去除末尾的斜杠（除非是根路径�?		if c.Server.BaseURL != "/" && strings.HasSuffix(c.Server.BaseURL, "/") {
 			c.Server.BaseURL = strings.TrimSuffix(c.Server.BaseURL, "/")
 		}
 	}
@@ -318,7 +291,7 @@ func validateDomainOrCIDR(input string) error {
 		return fmt.Errorf("empty domain")
 	}
 
-	// 允许通配符域名（以.开头）
+	// 允许通配符域名（�?开头）
 	if strings.HasPrefix(input, ".") {
 		if len(input) < 2 {
 			return fmt.Errorf("invalid wildcard domain")
@@ -330,19 +303,16 @@ func validateDomainOrCIDR(input string) error {
 
 // IsAllowedSkinDomain 检查域名是否在皮肤白名单中
 func (c *Config) IsAllowedSkinDomain(domain string) bool {
-	// 如果白名单为空，允许所有域名
-	if len(c.Yggdrasil.SkinDomains) == 0 {
+	// 如果白名单为空，允许所有域�?	if len(c.Yggdrasil.SkinDomains) == 0 {
 		return true
 	}
 
 	for _, allowed := range c.Yggdrasil.SkinDomains {
-		// 检查精确匹配
-		if domain == allowed {
+		// 检查精确匹�?		if domain == allowed {
 			return true
 		}
 
-		// 检查通配符匹配（以.开头的规则）
-		if strings.HasPrefix(allowed, ".") {
+		// 检查通配符匹配（�?开头的规则�?		if strings.HasPrefix(allowed, ".") {
 			if strings.HasSuffix(domain, allowed) {
 				return true
 			}
@@ -360,8 +330,7 @@ func (c *Config) GetBaseURL(host string) string {
 	return fmt.Sprintf("http://%s", host)
 }
 
-// GetLinkURL 获取链接URL，如果配置中没有则使用动态生成
-func (c *Config) GetLinkURL(linkType, host string) string {
+// GetLinkURL 获取链接URL，如果配置中没有则使用动态生�?func (c *Config) GetLinkURL(linkType, host string) string {
 	if url, exists := c.Yggdrasil.Meta.Links[linkType]; exists && url != "" {
 		return url
 	}
@@ -387,14 +356,12 @@ func DefaultConfig() *Config {
 			BaseURL: "", // 默认为空，表示不使用基础路径
 		},
 		Auth: AuthConfig{
-			TokenExpiration:     3 * 24 * time.Hour, // 3天
-			JWTSecret:           "yggdrasil-api-secret-key-change-in-production",
+			TokenExpiration:     3 * 24 * time.Hour, // 3�?			JWTSecret:           "yggdrasil-api-secret-key-change-in-production",
 			TokensLimit:         10,
 			RequireVerification: false,
 		},
 		Rate: RateConfig{
-			AuthInterval: 1 * time.Second, // 1秒间隔
-			Enabled:      true,
+			AuthInterval: 1 * time.Second, // 1秒间�?			Enabled:      true,
 		},
 		Storage: StorageConfig{
 			Type:          "memory",
@@ -482,9 +449,7 @@ func DefaultConfig() *Config {
 			RateLimit: RateLimitConfig{
 				Enabled:      true,
 				AuthInterval: 1 * time.Second,
-				GlobalLimit:  60, // 每分钟60个请求
-				BurstLimit:   10, // 突发10个请求
-			},
+				GlobalLimit:  60, // 每分�?0个请�?				BurstLimit:   10, // 突发10个请�?			},
 			Performance: PerformanceConfig{
 				Enabled:         true,
 				DetailedMetrics: false,
@@ -497,8 +462,7 @@ func DefaultConfig() *Config {
 			File:       "logs/yggdrasil.log",
 			MaxSize:    100, // 100MB
 			MaxBackups: 3,
-			MaxAge:     7, // 7天
-			Compress:   true,
+			MaxAge:     7, // 7�?			Compress:   true,
 		},
 		Monitoring: MonitoringConfig{
 			Enabled:         true,

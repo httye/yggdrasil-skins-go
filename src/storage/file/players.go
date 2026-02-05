@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"time"
 
-	storage "yggdrasil-api-go/src/storage/interface"
-	"yggdrasil-api-go/src/yggdrasil"
+	storage "github.com/httye/yggdrasil-skins-go/src/storage/interface"
+	"github.com/httye/yggdrasil-skins-go/src/yggdrasil"
 
 	"github.com/bytedance/sonic"
 )
@@ -32,8 +32,7 @@ func (s *Storage) loadPlayers() error {
 		return err
 	}
 
-	// 加载到缓存
-	for _, player := range players {
+	// 加载到缓�?	for _, player := range players {
 		s.players[player.UUID] = player
 		// 更新用户角色映射
 		for email, user := range s.users {
@@ -109,8 +108,7 @@ func (s *Storage) GetProfileByUUID(uuid string) (*yggdrasil.Profile, error) {
 	defer s.mu.RUnlock()
 
 	if player, exists := s.players[uuid]; exists {
-		// 获取角色的材质信息
-		textures, err := s.GetPlayerTextures(uuid)
+		// 获取角色的材质信�?		textures, err := s.GetPlayerTextures(uuid)
 		if err != nil {
 			// 如果获取材质失败，仍然返回角色信息，但properties为空
 			return &yggdrasil.Profile{
@@ -152,15 +150,13 @@ func (s *Storage) GetProfileByUUID(uuid string) (*yggdrasil.Profile, error) {
 	return nil, fmt.Errorf("profile not found")
 }
 
-// GetProfileByName 根据角色名获取角色
-func (s *Storage) GetProfileByName(name string) (*yggdrasil.Profile, error) {
+// GetProfileByName 根据角色名获取角�?func (s *Storage) GetProfileByName(name string) (*yggdrasil.Profile, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
 	for _, player := range s.players {
 		if player.Name == name {
-			// 获取角色的材质信息
-			textures, err := s.GetPlayerTextures(player.UUID)
+			// 获取角色的材质信�?			textures, err := s.GetPlayerTextures(player.UUID)
 			if err != nil {
 				// 如果获取材质失败，仍然返回角色信息，但properties为空
 				return &yggdrasil.Profile{
@@ -225,8 +221,7 @@ func (s *Storage) GetProfilesByNames(names []string) ([]*yggdrasil.Profile, erro
 	return profiles, nil
 }
 
-// GetProfilesByUserEmail 获取用户的所有角色
-func (s *Storage) GetProfilesByUserEmail(userEmail string) ([]*yggdrasil.Profile, error) {
+// GetProfilesByUserEmail 获取用户的所有角�?func (s *Storage) GetProfilesByUserEmail(userEmail string) ([]*yggdrasil.Profile, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
@@ -236,8 +231,7 @@ func (s *Storage) GetProfilesByUserEmail(userEmail string) ([]*yggdrasil.Profile
 		return nil, fmt.Errorf("user not found")
 	}
 
-	// 获取该用户的所有角色
-	var profiles []*yggdrasil.Profile
+	// 获取该用户的所有角�?	var profiles []*yggdrasil.Profile
 	for _, player := range s.players {
 		if player.UID == user.UID {
 			profiles = append(profiles, &yggdrasil.Profile{
@@ -256,15 +250,13 @@ func (s *Storage) CreateProfile(userEmail string, profile *yggdrasil.Profile) er
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	// 检查角色名是否已存在
-	for _, player := range s.players {
+	// 检查角色名是否已存�?	for _, player := range s.players {
 		if player.Name == profile.Name {
 			return fmt.Errorf("profile name already exists")
 		}
 	}
 
-	// 检查UUID是否已存在
-	if _, exists := s.players[profile.ID]; exists {
+	// 检查UUID是否已存�?	if _, exists := s.players[profile.ID]; exists {
 		return fmt.Errorf("profile UUID already exists")
 	}
 
@@ -274,8 +266,7 @@ func (s *Storage) CreateProfile(userEmail string, profile *yggdrasil.Profile) er
 		return fmt.Errorf("user not found")
 	}
 
-	// 创建新角色
-	newPlayer := &FilePlayer{
+	// 创建新角�?	newPlayer := &FilePlayer{
 		PID:        len(s.players) + 1, // 简单的ID生成
 		UID:        user.UID,
 		Name:       profile.Name,
@@ -301,8 +292,7 @@ func (s *Storage) UpdateProfile(profile *yggdrasil.Profile) error {
 		return fmt.Errorf("profile not found")
 	}
 
-	// 检查新名称是否与其他角色冲突
-	for uuid, p := range s.players {
+	// 检查新名称是否与其他角色冲�?	for uuid, p := range s.players {
 		if uuid != profile.ID && p.Name == profile.Name {
 			return fmt.Errorf("profile name already exists")
 		}
@@ -337,8 +327,7 @@ func (s *Storage) DeleteProfile(uuid string) error {
 	return s.savePlayers()
 }
 
-// ListProfiles 列出所有角色（分页）
-func (s *Storage) ListProfiles(offset, limit int) ([]*yggdrasil.Profile, int, error) {
+// ListProfiles 列出所有角色（分页�?func (s *Storage) ListProfiles(offset, limit int) ([]*yggdrasil.Profile, int, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 

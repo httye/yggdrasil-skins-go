@@ -7,25 +7,22 @@ import (
 	"os"
 	"time"
 
-	"yggdrasil-api-go/src/config"
-	storage "yggdrasil-api-go/src/storage/interface"
-	"yggdrasil-api-go/src/yggdrasil"
+	"github.com/httye/yggdrasil-skins-go/src/config"
+	storage "github.com/httye/yggdrasil-skins-go/src/storage/interface"
+	"github.com/httye/yggdrasil-skins-go/src/yggdrasil"
 )
 
 // CacheWarmupConfig 缓存预热配置
 type CacheWarmupConfig struct {
-	EnableAPIMetadata bool          // 是否预热API元数据
-	EnableErrorCache  bool          // 是否预热错误响应
+	EnableAPIMetadata bool          // 是否预热API元数�?	EnableErrorCache  bool          // 是否预热错误响应
 	UserCacheDuration time.Duration // 用户缓存持续时间
 }
 
-// WarmupCaches 预热所有缓存
-func WarmupCaches(cfg *config.Config, store storage.Storage) error {
-	log.Printf("🔥 开始缓存预热...")
+// WarmupCaches 预热所有缓�?func WarmupCaches(cfg *config.Config, store storage.Storage) error {
+	log.Printf("🔥 开始缓存预�?..")
 	start := time.Now()
 
-	// 检查响应缓存配置
-	if !cfg.Cache.Response.Enabled {
+	// 检查响应缓存配�?	if !cfg.Cache.Response.Enabled {
 		log.Printf("ℹ️  响应缓存已禁用，跳过预热")
 		return nil
 	}
@@ -35,18 +32,17 @@ func WarmupCaches(cfg *config.Config, store storage.Storage) error {
 		if err := warmupErrorResponses(); err != nil {
 			log.Printf("⚠️  错误响应缓存预热失败: %v", err)
 		} else {
-			log.Printf("✅ 错误响应缓存预热完成")
+			log.Printf("�?错误响应缓存预热完成")
 		}
 	} else {
-		log.Printf("ℹ️  错误响应缓存已禁用")
+		log.Printf("ℹ️  错误响应缓存已禁�?)
 	}
 
-	// 2. 预热API元数据缓存
-	if cfg.Cache.Response.APIMetadata {
+	// 2. 预热API元数据缓�?	if cfg.Cache.Response.APIMetadata {
 		if err := warmupAPIMetadata(cfg, store); err != nil {
-			log.Printf("⚠️  API元数据缓存预热失败: %v", err)
+			log.Printf("⚠️  API元数据缓存预热失�? %v", err)
 		} else {
-			log.Printf("✅ API元数据缓存预热完成")
+			log.Printf("�?API元数据缓存预热完�?)
 		}
 	} else {
 		log.Printf("ℹ️  API元数据缓存已禁用")
@@ -56,7 +52,7 @@ func WarmupCaches(cfg *config.Config, store storage.Storage) error {
 	if err := warmupUUIDCache(store); err != nil {
 		log.Printf("⚠️  UUID缓存预热失败: %v", err)
 	} else {
-		log.Printf("✅ UUID缓存预热完成")
+		log.Printf("�?UUID缓存预热完成")
 	}
 
 	duration := time.Since(start)
@@ -66,15 +62,12 @@ func WarmupCaches(cfg *config.Config, store storage.Storage) error {
 
 // warmupErrorResponses 预热错误响应缓存
 func warmupErrorResponses() error {
-	// 初始化错误响应缓存
-	InitErrorResponseCache()
+	// 初始化错误响应缓�?	InitErrorResponseCache()
 	return nil
 }
 
-// warmupAPIMetadata 预热API元数据缓存
-func warmupAPIMetadata(cfg *config.Config, store storage.Storage) error {
-	// 为常用的host预生成API元数据
-	commonHosts := []string{
+// warmupAPIMetadata 预热API元数据缓�?func warmupAPIMetadata(cfg *config.Config, store storage.Storage) error {
+	// 为常用的host预生成API元数�?	commonHosts := []string{
 		"localhost:8080",
 		"127.0.0.1:8080",
 		cfg.Server.Host + ":" + fmt.Sprintf("%d", cfg.Server.Port),
@@ -112,8 +105,7 @@ func warmupAPIMetadata(cfg *config.Config, store storage.Storage) error {
 			publicKey = "" // 使用空字符串作为降级
 		}
 
-		// 构建元数据
-		metadata := yggdrasil.APIMetadata{
+		// 构建元数�?		metadata := yggdrasil.APIMetadata{
 			Meta: yggdrasil.MetaInfo{
 				ServerName:            cfg.Yggdrasil.Meta.ServerName,
 				ImplementationName:    cfg.Yggdrasil.Meta.ImplementationName,
@@ -151,8 +143,7 @@ func loadPublicKey(publicKeyPath string) (string, error) {
 	return string(data), nil
 }
 
-// GetCacheStats 获取所有缓存统计信息
-func GetCacheStats() map[string]any {
+// GetCacheStats 获取所有缓存统计信�?func GetCacheStats() map[string]any {
 	stats := make(map[string]any)
 
 	// 全局性能指标

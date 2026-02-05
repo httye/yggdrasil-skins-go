@@ -8,17 +8,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"yggdrasil-api-go/src/models"
-	"yggdrasil-api-go/src/utils"
+	"github.com/httye/yggdrasil-skins-go/src/models"
+	"github.com/httye/yggdrasil-skins-go/src/utils"
 )
 
-// AnnouncementHandler 公告处理器
-type AnnouncementHandler struct {
+// AnnouncementHandler 公告处理�?type AnnouncementHandler struct {
 	db *gorm.DB
 }
 
-// NewAnnouncementHandler 创建公告处理器
-func NewAnnouncementHandler(db *gorm.DB) *AnnouncementHandler {
+// NewAnnouncementHandler 创建公告处理�?func NewAnnouncementHandler(db *gorm.DB) *AnnouncementHandler {
 	return &AnnouncementHandler{db: db}
 }
 
@@ -36,8 +34,7 @@ func (h *AnnouncementHandler) GetAnnouncements(c *gin.Context) {
 	// 构建查询
 	query := h.db.Model(&models.Announcement{})
 
-	// 应用筛选条件
-	if isActive != "" {
+	// 应用筛选条�?	if isActive != "" {
 		active := isActive == "true"
 		if active {
 			// 只获取有效的公告（激活状态且时间在有效期内）
@@ -78,8 +75,7 @@ func (h *AnnouncementHandler) GetAnnouncements(c *gin.Context) {
 		return
 	}
 
-	// 计算总页数
-	totalPages := int(total) / pageSize
+	// 计算总页�?	totalPages := int(total) / pageSize
 	if int(total)%pageSize > 0 {
 		totalPages++
 	}
@@ -94,10 +90,8 @@ func (h *AnnouncementHandler) GetAnnouncements(c *gin.Context) {
 	})
 }
 
-// GetActiveAnnouncements 获取当前有效的公告
-func (h *AnnouncementHandler) GetActiveAnnouncements(c *gin.Context) {
-	// 获取当前用户信息（如果已登录）
-	userUUID := c.GetString("user_uuid")
+// GetActiveAnnouncements 获取当前有效的公�?func (h *AnnouncementHandler) GetActiveAnnouncements(c *gin.Context) {
+	// 获取当前用户信息（如果已登录�?	userUUID := c.GetString("user_uuid")
 	var userGroup string = "all"
 
 	if userUUID != "" {
@@ -116,8 +110,7 @@ func (h *AnnouncementHandler) GetActiveAnnouncements(c *gin.Context) {
 	now := time.Now()
 	var announcements []models.ActiveAnnouncement
 
-	// 查询有效的公告
-	err := h.db.Raw(`
+	// 查询有效的公�?	err := h.db.Raw(`
 		SELECT 
 			a.id, a.title, a.content, a.type, a.priority,
 			a.target_group, a.start_time, a.end_time,
@@ -164,8 +157,7 @@ func (h *AnnouncementHandler) GetAnnouncement(c *gin.Context) {
 	c.JSON(http.StatusOK, announcement)
 }
 
-// CreateAnnouncement 创建新公告
-func (h *AnnouncementHandler) CreateAnnouncement(c *gin.Context) {
+// CreateAnnouncement 创建新公�?func (h *AnnouncementHandler) CreateAnnouncement(c *gin.Context) {
 	adminUUID := c.GetString("user_uuid")
 	if adminUUID == "" {
 		utils.RespondError(c, http.StatusUnauthorized, "UNAUTHORIZED", "Admin authentication required")
@@ -202,8 +194,7 @@ func (h *AnnouncementHandler) CreateAnnouncement(c *gin.Context) {
 		Type:        request.Type,
 		Priority:    request.Priority,
 		TargetGroup: request.TargetGroup,
-		StartTime:   time.Now(), // 默认从当前时间开始
-		EndTime:     request.EndTime,
+		StartTime:   time.Now(), // 默认从当前时间开�?		EndTime:     request.EndTime,
 		CreatedBy:   adminUUID,
 	}
 
@@ -347,8 +338,7 @@ func (h *AnnouncementHandler) DeleteAnnouncement(c *gin.Context) {
 	})
 }
 
-// ToggleAnnouncementStatus 切换公告状态
-func (h *AnnouncementHandler) ToggleAnnouncementStatus(c *gin.Context) {
+// ToggleAnnouncementStatus 切换公告状�?func (h *AnnouncementHandler) ToggleAnnouncementStatus(c *gin.Context) {
 	adminUUID := c.GetString("user_uuid")
 	if adminUUID == "" {
 		utils.RespondError(c, http.StatusUnauthorized, "UNAUTHORIZED", "Admin authentication required")
@@ -373,8 +363,7 @@ func (h *AnnouncementHandler) ToggleAnnouncementStatus(c *gin.Context) {
 		return
 	}
 
-	// 切换状态
-	newStatus := !announcement.IsActive
+	// 切换状�?	newStatus := !announcement.IsActive
 	if err := h.db.Model(&announcement).Update("is_active", newStatus).Error; err != nil {
 		utils.RespondError(c, http.StatusInternalServerError, "DATABASE_ERROR", "Failed to update announcement status")
 		return
@@ -395,8 +384,7 @@ func (h *AnnouncementHandler) GetAnnouncementTypes(c *gin.Context) {
 	})
 }
 
-// GetTargetGroups 获取目标用户组列表
-func (h *AnnouncementHandler) GetTargetGroups(c *gin.Context) {
+// GetTargetGroups 获取目标用户组列�?func (h *AnnouncementHandler) GetTargetGroups(c *gin.Context) {
 	groups := []string{"all", "users", "admins", "banned"}
 	c.JSON(http.StatusOK, gin.H{
 		"target_groups": groups,

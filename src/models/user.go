@@ -48,8 +48,7 @@ func (EnhancedUser) TableName() string {
 	return "users"
 }
 
-// PermissionGroup 权限组模型
-type PermissionGroup struct {
+// PermissionGroup 权限组模�?type PermissionGroup struct {
 	ID          int       `gorm:"primaryKey;autoIncrement" json:"id"`
 	Name        string    `gorm:"uniqueIndex;type:varchar(100);not null" json:"name"`
 	Description string    `gorm:"type:text" json:"description,omitempty"`
@@ -69,8 +68,7 @@ func (PermissionGroup) TableName() string {
 	return "permission_groups"
 }
 
-// Profile 角色模型（Minecraft游戏角色）
-type Profile struct {
+// Profile 角色模型（Minecraft游戏角色�?type Profile struct {
 	UUID      string     `gorm:"primaryKey;type:varchar(36)" json:"uuid"`
 	Name      string     `gorm:"uniqueIndex;type:varchar(255);not null" json:"name"`
 	UserUUID  string     `gorm:"type:varchar(36);not null;index" json:"user_uuid"`
@@ -178,8 +176,7 @@ func (Announcement) TableName() string {
 	return "announcements"
 }
 
-// AdminLog 管理员操作日志模型
-type AdminLog struct {
+// AdminLog 管理员操作日志模�?type AdminLog struct {
 	ID             int        `gorm:"primaryKey;autoIncrement" json:"id"`
 	AdminUUID      string     `gorm:"type:varchar(36);not null;index" json:"admin_uuid"`
 	Action         string     `gorm:"type:varchar(100);not null;index" json:"action"`
@@ -199,8 +196,7 @@ func (AdminLog) TableName() string {
 	return "admin_logs"
 }
 
-// ServerStatus 服务器状态模型
-type ServerStatus struct {
+// ServerStatus 服务器状态模�?type ServerStatus struct {
 	ID           int        `gorm:"primaryKey;autoIncrement" json:"id"`
 	ServerName   string     `gorm:"type:varchar(255);not null" json:"server_name"`
 	ServerType   string     `gorm:"type:enum('survival','creative','minigames','auth','lobby','bedwars','skywars');not null" json:"server_type"`
@@ -372,13 +368,11 @@ func (u *EnhancedUser) BeforeCreate(tx *gorm.DB) error {
 		u.MaxProfiles = 5 // 默认角色数量限制
 	}
 	if u.PermissionGroupID == 0 {
-		u.PermissionGroupID = 1 // 默认权限组
-	}
+		u.PermissionGroupID = 1 // 默认权限�?	}
 	return nil
 }
 
-// IsProfileLimitReached 检查是否达到角色数量限制
-func (u *EnhancedUser) IsProfileLimitReached(db *gorm.DB) (bool, error) {
+// IsProfileLimitReached 检查是否达到角色数量限�?func (u *EnhancedUser) IsProfileLimitReached(db *gorm.DB) (bool, error) {
 	var count int64
 	err := db.Model(&Profile{}).Where("user_uuid = ? AND is_active = ?", u.UUID, true).Count(&count).Error
 	if err != nil {
@@ -386,8 +380,7 @@ func (u *EnhancedUser) IsProfileLimitReached(db *gorm.DB) (bool, error) {
 	}
 	
 	if u.MaxProfiles == -1 {
-		return false, nil // 无限制
-	}
+		return false, nil // 无限�?	}
 	
 	return int(count) >= u.MaxProfiles, nil
 }
@@ -411,8 +404,7 @@ func (u *EnhancedUser) CanCreateProfile(db *gorm.DB) (bool, int, error) {
 	}
 	
 	if u.MaxProfiles == -1 {
-		return true, currentCount, nil // 无限制
-	}
+		return true, currentCount, nil // 无限�?	}
 	
 	return currentCount < u.MaxProfiles, currentCount, nil
 }
@@ -425,8 +417,7 @@ func (u *EnhancedUser) BanUser(reason string, adminUUID string, db *gorm.DB) err
 	u.BannedAt = &now
 	u.BannedBy = adminUUID
 	
-	// 禁用所有角色
-	if err := db.Model(&Profile{}).Where("user_uuid = ?", u.UUID).Update("is_active", false).Error; err != nil {
+	// 禁用所有角�?	if err := db.Model(&Profile{}).Where("user_uuid = ?", u.UUID).Update("is_active", false).Error; err != nil {
 		return err
 	}
 	
@@ -442,14 +433,11 @@ func (u *EnhancedUser) UnbanUser(db *gorm.DB) error {
 	return db.Save(u).Error
 }
 
-// HasPermission 检查用户权限
-func (u *EnhancedUser) HasPermission(permission string) bool {
+// HasPermission 检查用户权�?func (u *EnhancedUser) HasPermission(permission string) bool {
 	if u.IsAdmin {
-		return true // 管理员拥有所有权限
-	}
+		return true // 管理员拥有所有权�?	}
 	
-	// 这里应该检查权限组的权限配置
-	// 简化实现，实际需要解析u.PermissionGroup.Permissions
+	// 这里应该检查权限组的权限配�?	// 简化实现，实际需要解析u.PermissionGroup.Permissions
 	return true
 }
 
@@ -475,8 +463,7 @@ func GetUserFullInfo(db *gorm.DB, userUUID string) (*UserFullInfo, error) {
 	return &userInfo, err
 }
 
-// GetUserByPlayerName 通过游戏名获取用户信息
-func GetUserByPlayerName(db *gorm.DB, playerName string) (*EnhancedUser, error) {
+// GetUserByPlayerName 通过游戏名获取用户信�?func GetUserByPlayerName(db *gorm.DB, playerName string) (*EnhancedUser, error) {
 	var user EnhancedUser
 	err := db.Where("primary_player_name = ?", playerName).First(&user).Error
 	return &user, err
@@ -511,8 +498,7 @@ func GetUserLogs(db *gorm.DB, userUUID string, limit int) ([]UserLog, error) {
 	return logs, err
 }
 
-// UpdateLastLoginInfo 更新用户最后登录信息
-func (u *EnhancedUser) UpdateLastLoginInfo(db *gorm.DB, ipAddress string) error {
+// UpdateLastLoginInfo 更新用户最后登录信�?func (u *EnhancedUser) UpdateLastLoginInfo(db *gorm.DB, ipAddress string) error {
 	now := time.Now()
 	u.LastLoginIP = ipAddress
 	u.LastLoginAt = &now

@@ -1,14 +1,13 @@
-// Package handlers 提供HTTP请求处理器
-package handlers
+// Package handlers 提供HTTP请求处理�?package handlers
 
 import (
 	"crypto/rsa"
 	"fmt"
 	"sync"
-	"yggdrasil-api-go/src/config"
-	storage "yggdrasil-api-go/src/storage/interface"
-	"yggdrasil-api-go/src/utils"
-	"yggdrasil-api-go/src/yggdrasil"
+	"github.com/httye/yggdrasil-skins-go/src/config"
+	storage "github.com/httye/yggdrasil-skins-go/src/storage/interface"
+	"github.com/httye/yggdrasil-skins-go/src/utils"
+	"github.com/httye/yggdrasil-skins-go/src/yggdrasil"
 
 	"github.com/gin-gonic/gin"
 )
@@ -27,23 +26,19 @@ func NewMetaHandler(storage storage.Storage, cfg *config.Config) *MetaHandler {
 	}
 }
 
-// GetAPIMetadata 获取API元数据（启用响应缓存）
-func (h *MetaHandler) GetAPIMetadata(c *gin.Context) {
-	// 尝试从缓存获取响应
-	cacheKey := "api_metadata_" + c.Request.Host
+// GetAPIMetadata 获取API元数据（启用响应缓存�?func (h *MetaHandler) GetAPIMetadata(c *gin.Context) {
+	// 尝试从缓存获取响�?	cacheKey := "api_metadata_" + c.Request.Host
 	if cached, exists := utils.GetCachedResponse(cacheKey); exists {
 		c.Data(200, "application/json", cached)
 		return
 	}
 
-	// 获取请求的Host头
-	host := c.GetHeader("Host")
+	// 获取请求的Host�?	host := c.GetHeader("Host")
 	if host == "" {
 		host = c.Request.Host
 	}
 
-	// 动态生成链接
-	links := make(map[string]string)
+	// 动态生成链�?	links := make(map[string]string)
 	for key := range h.config.Yggdrasil.Meta.Links {
 		links[key] = h.config.GetLinkURL(key, host)
 	}
@@ -75,10 +70,8 @@ func (h *MetaHandler) GetAPIMetadata(c *gin.Context) {
 		SignaturePublicKey: publicKey,
 	}
 
-	// 使用高性能JSON响应并缓存结果
-	if jsonData, err := utils.FastMarshal(metadata); err == nil {
-		// 缓存响应（5分钟）
-		utils.SetCachedResponse(cacheKey, jsonData)
+	// 使用高性能JSON响应并缓存结�?	if jsonData, err := utils.FastMarshal(metadata); err == nil {
+		// 缓存响应�?分钟�?		utils.SetCachedResponse(cacheKey, jsonData)
 		c.Data(200, "application/json", jsonData)
 	} else {
 		// 降级到标准JSON
@@ -98,8 +91,7 @@ var (
 
 // loadSignatureKeyPair 加载签名密钥对并缓存
 func (h *MetaHandler) loadSignatureKeyPair() (privateKey string, publicKey string, err error) {
-	// 先检查缓存
-	keyPairMutex.RLock()
+	// 先检查缓�?	keyPairMutex.RLock()
 	if keyPairCached {
 		defer keyPairMutex.RUnlock()
 		return cachedPrivateKey, cachedPublicKey, nil
@@ -122,8 +114,7 @@ func (h *MetaHandler) loadSignatureKeyPair() (privateKey string, publicKey strin
 			return "", "", fmt.Errorf("failed to get signature key pair from storage: %w", err)
 		}
 	} else {
-		// 对于其他存储类型，从配置文件读取密钥对
-		privateKey, publicKey, err = utils.LoadOrGenerateKeyPair(
+		// 对于其他存储类型，从配置文件读取密钥�?		privateKey, publicKey, err = utils.LoadOrGenerateKeyPair(
 			h.config.Yggdrasil.Keys.PrivateKeyPath,
 			h.config.Yggdrasil.Keys.PublicKeyPath,
 		)
@@ -132,16 +123,14 @@ func (h *MetaHandler) loadSignatureKeyPair() (privateKey string, publicKey strin
 		}
 	}
 
-	// 解析并缓存RSA密钥对
-	rsaPrivateKey, err := utils.ParsePrivateKey(privateKey)
+	// 解析并缓存RSA密钥�?	rsaPrivateKey, err := utils.ParsePrivateKey(privateKey)
 	if err != nil {
 		return "", "", fmt.Errorf("failed to parse private key: %w", err)
 	}
 
 	rsaPublicKey := &rsaPrivateKey.PublicKey
 
-	// 缓存所有密钥信息
-	cachedPrivateKey = privateKey
+	// 缓存所有密钥信�?	cachedPrivateKey = privateKey
 	cachedPublicKey = publicKey
 	cachedRSAPrivateKey = rsaPrivateKey
 	cachedRSAPublicKey = rsaPublicKey
@@ -150,8 +139,7 @@ func (h *MetaHandler) loadSignatureKeyPair() (privateKey string, publicKey strin
 	return privateKey, publicKey, nil
 }
 
-// GetCachedRSAKeyPair 获取缓存的RSA密钥对（高性能版本）
-func GetCachedRSAKeyPair() (privateKey *rsa.PrivateKey, publicKey *rsa.PublicKey, err error) {
+// GetCachedRSAKeyPair 获取缓存的RSA密钥对（高性能版本�?func GetCachedRSAKeyPair() (privateKey *rsa.PrivateKey, publicKey *rsa.PublicKey, err error) {
 	keyPairMutex.RLock()
 	defer keyPairMutex.RUnlock()
 

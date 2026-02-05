@@ -6,10 +6,9 @@ import (
 )
 
 var (
-	// 邮箱验证正则表达式
-	emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
+	// 邮箱验证正则表达�?	emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
 	
-	// 用户名验证正则表达式（3-16位，字母数字下划线）
+	// 用户名验证正则表达式�?-16位，字母数字下划线）
 	usernameRegex = regexp.MustCompile(`^[a-zA-Z0-9_]{3,16}$`)
 	
 	// 游戏名验证正则表达式（Minecraft玩家名规则）
@@ -18,8 +17,7 @@ var (
 	// QQ号验证正则表达式
 	qqNumberRegex = regexp.MustCompile(`^[1-9][0-9]{4,10}$`)
 	
-	// 密码强度验证正则表达式
-	// 至少8位，包含大小写字母和数字
+	// 密码强度验证正则表达�?	// 至少8位，包含大小写字母和数字
 	strongPasswordRegex = regexp.MustCompile(`^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$`)
 )
 
@@ -31,8 +29,7 @@ func IsValidEmail(email string) bool {
 	return emailRegex.MatchString(email)
 }
 
-// IsValidUsername 验证用户名格式
-func IsValidUsername(username string) bool {
+// IsValidUsername 验证用户名格�?func IsValidUsername(username string) bool {
 	if len(username) < 3 || len(username) > 16 {
 		return false
 	}
@@ -46,8 +43,7 @@ func IsValidPlayerName(playerName string) bool {
 	}
 	
 	// Minecraft玩家名规则：
-	// 1. 长度3-16个字符
-	// 2. 只能包含字母、数字、下划线
+	// 1. 长度3-16个字�?	// 2. 只能包含字母、数字、下划线
 	// 3. 不能以数字开头（某些服务器限制）
 	// 4. 不能包含连续的下划线
 	
@@ -60,8 +56,7 @@ func IsValidPlayerName(playerName string) bool {
 		return false
 	}
 	
-	// 检查是否包含连续的下划线
-	if strings.Contains(playerName, "__") {
+	// 检查是否包含连续的下划�?	if strings.Contains(playerName, "__") {
 		return false
 	}
 	
@@ -89,16 +84,14 @@ func IsValidPassword(password string) bool {
 	return true
 }
 
-// IsStrongPassword 验证强密码格式
-func IsStrongPassword(password string) bool {
+// IsStrongPassword 验证强密码格�?func IsStrongPassword(password string) bool {
 	if len(password) < 8 {
 		return false
 	}
 	return strongPasswordRegex.MatchString(password)
 }
 
-// SanitizePlayerName 清理游戏名
-func SanitizePlayerName(playerName string) string {
+// SanitizePlayerName 清理游戏�?func SanitizePlayerName(playerName string) string {
 	// 移除前后空格
 	playerName = strings.TrimSpace(playerName)
 	
@@ -116,8 +109,7 @@ func SanitizePlayerName(playerName string) string {
 	return playerName
 }
 
-// SanitizeUsername 清理用户名
-func SanitizeUsername(username string) string {
+// SanitizeUsername 清理用户�?func SanitizeUsername(username string) string {
 	// 移除前后空格
 	username = strings.TrimSpace(username)
 	
@@ -134,8 +126,7 @@ func SanitizeEmail(email string) string {
 	// 移除前后空格和换行符
 	email = strings.TrimSpace(email)
 	
-	// 转换为小写
-	email = strings.ToLower(email)
+	// 转换为小�?	email = strings.ToLower(email)
 	
 	return email
 }
@@ -145,42 +136,39 @@ func ValidateRegistrationData(email, username, password, playerName, qqNumber st
 	var errors []string
 	
 	if !IsValidEmail(email) {
-		errors = append(errors, "邮箱格式不正确")
+		errors = append(errors, "邮箱格式不正�?)
 	}
 	
 	if !IsValidUsername(username) {
-		errors = append(errors, "用户名格式不正确（3-16位，只能包含字母、数字、下划线）")
+		errors = append(errors, "用户名格式不正确�?-16位，只能包含字母、数字、下划线�?)
 	}
 	
 	if !IsValidPassword(password) {
-		errors = append(errors, "密码长度至少6位")
+		errors = append(errors, "密码长度至少6�?)
 	}
 	
 	if !IsValidPlayerName(playerName) {
-		errors = append(errors, "游戏名格式不正确（3-16位，只能包含字母、数字、下划线，不能以数字开头）")
+		errors = append(errors, "游戏名格式不正确�?-16位，只能包含字母、数字、下划线，不能以数字开头）")
 	}
 	
 	if !IsValidQQNumber(qqNumber) {
-		errors = append(errors, "QQ号码格式不正确")
+		errors = append(errors, "QQ号码格式不正�?)
 	}
 	
 	return errors
 }
 
-// CheckPasswordStrength 检查密码强度
-func CheckPasswordStrength(password string) (score int, feedback string) {
+// CheckPasswordStrength 检查密码强�?func CheckPasswordStrength(password string) (score int, feedback string) {
 	score = 0
 	
-	// 长度检查
-	if len(password) >= 8 {
+	// 长度检�?	if len(password) >= 8 {
 		score++
 	}
 	if len(password) >= 12 {
 		score++
 	}
 	
-	// 复杂度检查
-	hasLower := regexp.MustCompile(`[a-z]`).MatchString(password)
+	// 复杂度检�?	hasLower := regexp.MustCompile(`[a-z]`).MatchString(password)
 	hasUpper := regexp.MustCompile(`[A-Z]`).MatchString(password)
 	hasDigit := regexp.MustCompile(`[0-9]`).MatchString(password)
 	hasSpecial := regexp.MustCompile(`[^a-zA-Z0-9]`).MatchString(password)
@@ -201,11 +189,11 @@ func CheckPasswordStrength(password string) (score int, feedback string) {
 	// 生成反馈
 	switch score {
 	case 0, 1:
-		feedback = "密码强度很弱，建议增加长度和复杂度"
+		feedback = "密码强度很弱，建议增加长度和复杂�?
 	case 2, 3:
 		feedback = "密码强度较弱，建议增加大小写字母、数字或特殊字符"
 	case 4, 5:
-		feedback = "密码强度中等，可以继续增强"
+		feedback = "密码强度中等，可以继续增�?
 	case 6, 7:
 		feedback = "密码强度较强"
 	default:

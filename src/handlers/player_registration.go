@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"yggdrasil-api-go/src/services"
-	"yggdrasil-api-go/src/utils"
+	"github.com/httye/yggdrasil-skins-go/src/services"
+	"github.com/httye/yggdrasil-skins-go/src/utils"
 )
 
 // PlayerRegistrationHandler 游戏名注册处理器
@@ -34,8 +34,7 @@ func (h *PlayerRegistrationHandler) RegisterWithPlayerName(c *gin.Context) {
 		return
 	}
 
-	// 获取客户端信息
-	request.RegistrationIP = c.ClientIP()
+	// 获取客户端信�?	request.RegistrationIP = c.ClientIP()
 	request.UserAgent = c.Request.UserAgent()
 
 	// 验证注册数据
@@ -51,8 +50,7 @@ func (h *PlayerRegistrationHandler) RegisterWithPlayerName(c *gin.Context) {
 		return
 	}
 
-	// 检查密码强度
-	score, feedback := utils.CheckPasswordStrength(request.Password)
+	// 检查密码强�?	score, feedback := utils.CheckPasswordStrength(request.Password)
 	if score < 3 {
 		utils.RespondError(c, http.StatusBadRequest, "WEAK_PASSWORD", feedback)
 		return
@@ -84,8 +82,7 @@ func (h *PlayerRegistrationHandler) RegisterWithPlayerName(c *gin.Context) {
 		return
 	}
 
-	// 返回成功响应（不包含敏感信息）
-	c.JSON(http.StatusCreated, gin.H{
+	// 返回成功响应（不包含敏感信息�?	c.JSON(http.StatusCreated, gin.H{
 		"message": "Registration successful",
 		"user": gin.H{
 			"uuid":                user.UUID,
@@ -104,8 +101,7 @@ func (h *PlayerRegistrationHandler) RegisterWithPlayerName(c *gin.Context) {
 func (h *PlayerRegistrationHandler) CheckPlayerNameAvailability(c *gin.Context) {
 	playerName := c.Param("playerName")
 
-	// 验证游戏名格式
-	if !utils.IsValidPlayerName(playerName) {
+	// 验证游戏名格�?	if !utils.IsValidPlayerName(playerName) {
 		utils.RespondError(c, http.StatusBadRequest, "INVALID_PLAYER_NAME", "Invalid player name format")
 		return
 	}
@@ -122,12 +118,10 @@ func (h *PlayerRegistrationHandler) CheckPlayerNameAvailability(c *gin.Context) 
 	})
 }
 
-// GetUserByPlayerName 通过游戏名获取用户信息
-func (h *PlayerRegistrationHandler) GetUserByPlayerName(c *gin.Context) {
+// GetUserByPlayerName 通过游戏名获取用户信�?func (h *PlayerRegistrationHandler) GetUserByPlayerName(c *gin.Context) {
 	playerName := c.Param("playerName")
 
-	// 验证游戏名格式
-	if !utils.IsValidPlayerName(playerName) {
+	// 验证游戏名格�?	if !utils.IsValidPlayerName(playerName) {
 		utils.RespondError(c, http.StatusBadRequest, "INVALID_PLAYER_NAME", "Invalid player name format")
 		return
 	}
@@ -153,8 +147,7 @@ func (h *PlayerRegistrationHandler) GetUserLogs(c *gin.Context) {
 		return
 	}
 
-	limit := 50 // 默认限制50条
-	if limitStr := c.Query("limit"); limitStr != "" {
+	limit := 50 // 默认限制50�?	if limitStr := c.Query("limit"); limitStr != "" {
 		if parsedLimit := utils.ParseInt(limitStr); parsedLimit > 0 && parsedLimit <= 200 {
 			limit = parsedLimit
 		}
@@ -194,8 +187,7 @@ func (h *PlayerRegistrationHandler) VerifyEmail(c *gin.Context) {
 	})
 }
 
-// SendEmailVerification 发送邮箱验证邮件
-func (h *PlayerRegistrationHandler) SendEmailVerification(c *gin.Context) {
+// SendEmailVerification 发送邮箱验证邮�?func (h *PlayerRegistrationHandler) SendEmailVerification(c *gin.Context) {
 	userUUID := c.GetString("user_uuid")
 	if userUUID == "" {
 		utils.RespondError(c, http.StatusUnauthorized, "UNAUTHORIZED", "User not authenticated")
@@ -224,11 +216,8 @@ func (h *PlayerRegistrationHandler) SendEmailVerification(c *gin.Context) {
 		return
 	}
 
-	// 这里应该发送邮件，简化处理
-	// TODO: 集成邮件发送服务
-
+	// 这里应该发送邮件，简化处�?	// TODO: 集成邮件发送服�?
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Verification email sent",
-		"token":   token, // 开发环境下返回令牌，生产环境应该通过邮件发送
-	})
+		"token":   token, // 开发环境下返回令牌，生产环境应该通过邮件发�?	})
 }

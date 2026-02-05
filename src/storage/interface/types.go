@@ -4,8 +4,8 @@ package storage
 import (
 	"time"
 
-	"yggdrasil-api-go/src/config"
-	"yggdrasil-api-go/src/yggdrasil"
+	"github.com/httye/yggdrasil-skins-go/src/config"
+	"github.com/httye/yggdrasil-skins-go/src/yggdrasil"
 )
 
 // UserStorage 用户存储接口
@@ -16,8 +16,7 @@ type UserStorage interface {
 	// GetUserByID 根据用户ID获取用户
 	GetUserByID(userID string) (*yggdrasil.User, error)
 
-	// GetUserByPlayerName 根据角色名获取用户
-	GetUserByPlayerName(playerName string) (*yggdrasil.User, error)
+	// GetUserByPlayerName 根据角色名获取用�?	GetUserByPlayerName(playerName string) (*yggdrasil.User, error)
 
 	// GetUserByUUID 根据UUID获取用户
 	GetUserByUUID(uuid string) (*yggdrasil.User, error)
@@ -37,8 +36,7 @@ type ProfileStorage interface {
 	// GetProfilesByNames 根据名称列表批量获取角色
 	GetProfilesByNames(names []string) ([]*yggdrasil.Profile, error)
 
-	// GetProfilesByUserEmail 获取用户的所有角色
-	GetProfilesByUserEmail(userEmail string) ([]*yggdrasil.Profile, error)
+	// GetProfilesByUserEmail 获取用户的所有角�?	GetProfilesByUserEmail(userEmail string) ([]*yggdrasil.Profile, error)
 
 	// GetUserProfiles 根据用户UUID获取角色
 	GetUserProfiles(userUUID string) ([]*yggdrasil.Profile, error)
@@ -52,8 +50,7 @@ type TextureStorage interface {
 	// GetTexture 获取材质文件
 	GetTexture(textureType TextureType, playerUUID string) (*TextureInfo, error)
 
-	// GetPlayerTextures 获取角色的所有材质
-	GetPlayerTextures(playerUUID string) (map[TextureType]*TextureInfo, error)
+	// GetPlayerTextures 获取角色的所有材�?	GetPlayerTextures(playerUUID string) (map[TextureType]*TextureInfo, error)
 
 	// DeleteTexture 删除材质文件
 	DeleteTexture(textureType TextureType, playerUUID string) error
@@ -61,8 +58,7 @@ type TextureStorage interface {
 	// GetTextureURL 计算材质URL
 	GetTextureURL(textureType TextureType, playerUUID string) string
 
-	// IsUploadSupported 检查是否支持材质上传
-	IsUploadSupported() bool
+	// IsUploadSupported 检查是否支持材质上�?	IsUploadSupported() bool
 }
 
 // TextureType 材质类型
@@ -73,11 +69,8 @@ const (
 	TextureTypeCape TextureType = "CAPE"
 )
 
-// TextureMetadata 材质元数据
-type TextureMetadata struct {
-	Model      string         `json:"model,omitempty"` // 皮肤模型（steve/alex）
-	Slim       bool           `json:"slim,omitempty"`  // 是否为纤细模型
-	UploadedAt time.Time      `json:"uploaded_at"`     // 上传时间
+// TextureMetadata 材质元数�?type TextureMetadata struct {
+	Model      string         `json:"model,omitempty"` // 皮肤模型（steve/alex�?	Slim       bool           `json:"slim,omitempty"`  // 是否为纤细模�?	UploadedAt time.Time      `json:"uploaded_at"`     // 上传时间
 	FileSize   int64          `json:"file_size"`       // 文件大小
 	Hash       string         `json:"hash"`            // 文件哈希
 	Extra      map[string]any `json:"extra,omitempty"` // 额外信息
@@ -87,11 +80,9 @@ type TextureMetadata struct {
 type TextureInfo struct {
 	Type     TextureType      `json:"type"`     // 材质类型
 	URL      string           `json:"url"`      // 材质URL
-	Metadata *TextureMetadata `json:"metadata"` // 材质元数据
-}
+	Metadata *TextureMetadata `json:"metadata"` // 材质元数�?}
 
-// Storage 统一存储接口（只负责业务数据）
-type Storage interface {
+// Storage 统一存储接口（只负责业务数据�?type Storage interface {
 	UserStorage
 	ProfileStorage
 	TextureStorage
@@ -99,8 +90,7 @@ type Storage interface {
 	// Close 关闭存储连接
 	Close() error
 
-	// Ping 检查存储连接
-	Ping() error
+	// Ping 检查存储连�?	Ping() error
 
 	// GetStorageType 获取存储类型
 	GetStorageType() string
@@ -115,6 +105,5 @@ type StorageFactory interface {
 	// CreateStorage 创建存储实例
 	CreateStorage(config *config.StorageConfig, textureConfig *config.TextureConfig) (Storage, error)
 
-	// GetSupportedTypes 获取支持的存储类型
-	GetSupportedTypes() []string
+	// GetSupportedTypes 获取支持的存储类�?	GetSupportedTypes() []string
 }

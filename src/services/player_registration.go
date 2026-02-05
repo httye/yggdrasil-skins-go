@@ -10,32 +10,26 @@ import (
 
 	"gorm.io/gorm"
 
-	"yggdrasil-api-go/src/models"
-	"yggdrasil-api-go/src/utils"
+	"github.com/httye/yggdrasil-skins-go/src/models"
+	"github.com/httye/yggdrasil-skins-go/src/utils"
 )
 
 var (
 	// ErrPlayerNameExists 游戏名已存在错误
 	ErrPlayerNameExists = errors.New("player name already exists")
-	// ErrInvalidPlayerName 无效游戏名错误
-	ErrInvalidPlayerName = errors.New("invalid player name")
-	// ErrPlayerVerificationFailed 游戏名验证失败错误
-	ErrPlayerVerificationFailed = errors.New("player name verification failed")
-	// ErrEmailNotVerified 邮箱未验证错误
-	ErrEmailNotVerified = errors.New("email not verified")
-	// ErrTermsNotAccepted 用户协议未接受错误
-	ErrTermsNotAccepted = errors.New("terms not accepted")
+	// ErrInvalidPlayerName 无效游戏名错�?	ErrInvalidPlayerName = errors.New("invalid player name")
+	// ErrPlayerVerificationFailed 游戏名验证失败错�?	ErrPlayerVerificationFailed = errors.New("player name verification failed")
+	// ErrEmailNotVerified 邮箱未验证错�?	ErrEmailNotVerified = errors.New("email not verified")
+	// ErrTermsNotAccepted 用户协议未接受错�?	ErrTermsNotAccepted = errors.New("terms not accepted")
 )
 
-// PlayerRegistrationService 游戏名注册服务
-type PlayerRegistrationService struct {
+// PlayerRegistrationService 游戏名注册服�?type PlayerRegistrationService struct {
 	db                *gorm.DB
 	yggdrasilAPIURL   string
 	httpClient        *http.Client
 }
 
-// NewPlayerRegistrationService 创建游戏名注册服务
-func NewPlayerRegistrationService(db *gorm.DB, yggdrasilAPIURL string) *PlayerRegistrationService {
+// NewPlayerRegistrationService 创建游戏名注册服�?func NewPlayerRegistrationService(db *gorm.DB, yggdrasilAPIURL string) *PlayerRegistrationService {
 	return &PlayerRegistrationService{
 		db:              db,
 		yggdrasilAPIURL: yggdrasilAPIURL,
@@ -52,8 +46,7 @@ func (s *PlayerRegistrationService) RegisterWithPlayerName(request PlayerRegistr
 		return nil, err
 	}
 
-	// 检查游戏名是否已存在
-	if err := s.checkPlayerNameAvailability(request.PlayerName); err != nil {
+	// 检查游戏名是否已存�?	if err := s.checkPlayerNameAvailability(request.PlayerName); err != nil {
 		return nil, err
 	}
 
@@ -62,18 +55,15 @@ func (s *PlayerRegistrationService) RegisterWithPlayerName(request PlayerRegistr
 		return nil, errors.New("invalid email format")
 	}
 
-	// 验证用户名格式
-	if !utils.IsValidUsername(request.Username) {
+	// 验证用户名格�?	if !utils.IsValidUsername(request.Username) {
 		return nil, errors.New("invalid username format")
 	}
 
-	// 验证游戏名格式
-	if !utils.IsValidPlayerName(request.PlayerName) {
+	// 验证游戏名格�?	if !utils.IsValidPlayerName(request.PlayerName) {
 		return nil, ErrInvalidPlayerName
 	}
 
-	// 验证游戏名和密码（通过Yggdrasil API）
-	playerInfo, err := s.verifyPlayerCredentials(request.PlayerName, request.PlayerPassword)
+	// 验证游戏名和密码（通过Yggdrasil API�?	playerInfo, err := s.verifyPlayerCredentials(request.PlayerName, request.PlayerPassword)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", ErrPlayerVerificationFailed, err)
 	}
@@ -90,13 +80,11 @@ func (s *PlayerRegistrationService) RegisterWithPlayerName(request PlayerRegistr
 		PrimaryPlayerName: request.PlayerName,
 		PlayerUUID:        playerInfo.UUID,
 		QQNumber:          request.QQNumber,
-		EmailVerified:     false, // 需要后续验证
-		AgreedToTerms:     request.AgreedToTerms,
+		EmailVerified:     false, // 需要后续验�?		AgreedToTerms:     request.AgreedToTerms,
 		RegistrationIP:    request.RegistrationIP,
 		MaxProfiles:       5, // 默认限制
 		IsAdmin:           false,
-		PermissionGroupID: 1, // 默认权限组
-	}
+		PermissionGroupID: 1, // 默认权限�?	}
 
 	// 保存用户到数据库
 	if err := s.db.Create(user).Error; err != nil {
@@ -115,8 +103,7 @@ func (s *PlayerRegistrationService) RegisterWithPlayerName(request PlayerRegistr
 	return user, nil
 }
 
-// PlayerRegistrationRequest 游戏名注册请求
-type PlayerRegistrationRequest struct {
+// PlayerRegistrationRequest 游戏名注册请�?type PlayerRegistrationRequest struct {
 	Email             string `json:"email" binding:"required,email"`
 	Username          string `json:"username" binding:"required,min=3,max=16,alphanum"`
 	Password          string `json:"password" binding:"required,min=6"`
@@ -136,8 +123,7 @@ type PlayerInfo struct {
 	ClientToken string `json:"clientToken"`
 }
 
-// verifyPlayerCredentials 通过Yggdrasil API验证游戏名凭据
-func (s *PlayerRegistrationService) verifyPlayerCredentials(playerName, playerPassword string) (*PlayerInfo, error) {
+// verifyPlayerCredentials 通过Yggdrasil API验证游戏名凭�?func (s *PlayerRegistrationService) verifyPlayerCredentials(playerName, playerPassword string) (*PlayerInfo, error) {
 	// 构建认证请求
 	authRequest := map[string]interface{}{
 		"username": playerName,
@@ -148,14 +134,12 @@ func (s *PlayerRegistrationService) verifyPlayerCredentials(playerName, playerPa
 		},
 	}
 
-	// 序列化请求数据
-	requestBody, err := json.Marshal(authRequest)
+	// 序列化请求数�?	requestBody, err := json.Marshal(authRequest)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal auth request: %w", err)
 	}
 
-	// 发送认证请求
-	url := s.yggdrasilAPIURL + "/authserver/authenticate"
+	// 发送认证请�?	url := s.yggdrasilAPIURL + "/authserver/authenticate"
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(requestBody))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
@@ -164,15 +148,13 @@ func (s *PlayerRegistrationService) verifyPlayerCredentials(playerName, playerPa
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
 
-	// 发送请求
-	resp, err := s.httpClient.Do(req)
+	// 发送请�?	resp, err := s.httpClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to send auth request: %w", err)
 	}
 	defer resp.Body.Close()
 
-	// 检查响应状态
-	if resp.StatusCode != http.StatusOK {
+	// 检查响应状�?	if resp.StatusCode != http.StatusOK {
 		var errorResp map[string]interface{}
 		if err := json.NewDecoder(resp.Body).Decode(&errorResp); err != nil {
 			return nil, fmt.Errorf("authentication failed with status %d", resp.StatusCode)
@@ -226,8 +208,7 @@ func (s *PlayerRegistrationService) checkPlayerNameAvailability(playerName strin
 
 // validateRegistrationRequest 验证注册请求
 func (s *PlayerRegistrationService) validateRegistrationRequest(request PlayerRegistrationRequest) error {
-	// 检查用户协议是否同意
-	if !request.AgreedToTerms {
+	// 检查用户协议是否同�?	if !request.AgreedToTerms {
 		return ErrTermsNotAccepted
 	}
 
@@ -241,8 +222,7 @@ func (s *PlayerRegistrationService) validateRegistrationRequest(request PlayerRe
 		return errors.New("email already exists")
 	}
 
-	// 检查用户名是否已存在
-	var usernameCount int64
+	// 检查用户名是否已存�?	var usernameCount int64
 	err = s.db.Model(&models.EnhancedUser{}).Where("username = ?", request.Username).Count(&usernameCount).Error
 	if err != nil {
 		return fmt.Errorf("failed to check username availability: %w", err)
@@ -254,8 +234,7 @@ func (s *PlayerRegistrationService) validateRegistrationRequest(request PlayerRe
 	return nil
 }
 
-// GetUserByPlayerName 通过游戏名获取用户信息（公开信息）
-func (s *PlayerRegistrationService) GetUserByPlayerName(playerName string) (*PlayerUserInfo, error) {
+// GetUserByPlayerName 通过游戏名获取用户信息（公开信息�?func (s *PlayerRegistrationService) GetUserByPlayerName(playerName string) (*PlayerUserInfo, error) {
 	var user models.EnhancedUser
 	err := s.db.Where("primary_player_name = ?", playerName).First(&user).Error
 	if err != nil {
@@ -277,8 +256,7 @@ func (s *PlayerRegistrationService) GetUserByPlayerName(playerName string) (*Pla
 	}, nil
 }
 
-// PlayerUserInfo 玩家用户信息（公开信息）
-type PlayerUserInfo struct {
+// PlayerUserInfo 玩家用户信息（公开信息�?type PlayerUserInfo struct {
 	UUID              string    `json:"uuid"`
 	Username          string    `json:"username"`
 	PrimaryPlayerName string    `json:"primary_player_name"`
@@ -300,8 +278,7 @@ func (s *PlayerRegistrationService) CheckPlayerNameExists(playerName string) (bo
 
 // logUserAction 记录用户操作日志
 func (s *PlayerRegistrationService) logUserAction(userUUID, action string, details models.JSONMap, ipAddress, userAgent string) {
-	// 异步记录日志，不阻塞主流程
-	go func() {
+	// 异步记录日志，不阻塞主流�?	go func() {
 		if err := models.LogUserAction(s.db, userUUID, action, details, ipAddress, userAgent); err != nil {
 			// 记录日志失败，可以在这里添加错误处理
 			fmt.Printf("Failed to log user action: %v\n", err)

@@ -14,8 +14,7 @@ type LRUCache struct {
 	mutex    sync.RWMutex
 }
 
-// cacheItem 缓存项
-type cacheItem struct {
+// cacheItem 缓存�?type cacheItem struct {
 	key   string
 	value string
 }
@@ -33,8 +32,7 @@ func NewLRUCache(capacity int) *LRUCache {
 	}
 }
 
-// Get 获取缓存值
-func (c *LRUCache) Get(key string) (string, bool) {
+// Get 获取缓存�?func (c *LRUCache) Get(key string) (string, bool) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 
@@ -46,20 +44,17 @@ func (c *LRUCache) Get(key string) (string, bool) {
 	return "", false
 }
 
-// Put 设置缓存值
-func (c *LRUCache) Put(key, value string) {
+// Put 设置缓存�?func (c *LRUCache) Put(key, value string) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 
 	if elem, exists := c.cache[key]; exists {
-		// 更新现有项
-		c.list.MoveToFront(elem)
+		// 更新现有�?		c.list.MoveToFront(elem)
 		elem.Value.(*cacheItem).value = value
 		return
 	}
 
-	// 检查容量限制
-	if c.list.Len() >= c.capacity {
+	// 检查容量限�?	if c.list.Len() >= c.capacity {
 		// 移除最久未使用的项
 		back := c.list.Back()
 		if back != nil {
@@ -74,8 +69,7 @@ func (c *LRUCache) Put(key, value string) {
 	c.cache[key] = elem
 }
 
-// Delete 删除缓存项
-func (c *LRUCache) Delete(key string) {
+// Delete 删除缓存�?func (c *LRUCache) Delete(key string) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 
@@ -111,8 +105,7 @@ type UUIDCache struct {
 // NewUUIDCache 创建UUID缓存
 func NewUUIDCache(maxSize int) *UUIDCache {
 	if maxSize <= 0 {
-		maxSize = 1000 // 默认缓存1000条
-	}
+		maxSize = 1000 // 默认缓存1000�?	}
 
 	return &UUIDCache{
 		nameToUUID: NewLRUCache(maxSize),
@@ -121,8 +114,7 @@ func NewUUIDCache(maxSize int) *UUIDCache {
 	}
 }
 
-// GetUUIDByName 根据角色名获取UUID（从缓存）
-func (uc *UUIDCache) GetUUIDByName(name string) (string, bool) {
+// GetUUIDByName 根据角色名获取UUID（从缓存�?func (uc *UUIDCache) GetUUIDByName(name string) (string, bool) {
 	return uc.nameToUUID.Get(name)
 }
 
@@ -131,8 +123,7 @@ func (uc *UUIDCache) GetNameByUUID(uuid string) (string, bool) {
 	return uc.uuidToName.Get(uuid)
 }
 
-// PutMapping 添加UUID映射到缓存
-func (uc *UUIDCache) PutMapping(name, uuid string) {
+// PutMapping 添加UUID映射到缓�?func (uc *UUIDCache) PutMapping(name, uuid string) {
 	uc.nameToUUID.Put(name, uuid)
 	uc.uuidToName.Put(uuid, name)
 }

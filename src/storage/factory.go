@@ -4,10 +4,10 @@ package storage_factory
 import (
 	"fmt"
 
-	"yggdrasil-api-go/src/config"
-	"yggdrasil-api-go/src/storage/blessing_skin"
-	"yggdrasil-api-go/src/storage/file"
-	storage "yggdrasil-api-go/src/storage/interface"
+	"github.com/httye/yggdrasil-skins-go/src/config"
+	"github.com/httye/yggdrasil-skins-go/src/storage/blessing_skin"
+	"github.com/httye/yggdrasil-skins-go/src/storage/file"
+	storage "github.com/httye/yggdrasil-skins-go/src/storage/interface"
 )
 
 // DefaultStorageFactory 默认存储工厂
@@ -32,8 +32,7 @@ func (f *DefaultStorageFactory) CreateStorage(config *config.StorageConfig, text
 	}
 }
 
-// GetSupportedTypes 获取支持的存储类型
-func (f *DefaultStorageFactory) GetSupportedTypes() []string {
+// GetSupportedTypes 获取支持的存储类�?func (f *DefaultStorageFactory) GetSupportedTypes() []string {
 	return []string{"file", "database", "blessing_skin"}
 }
 

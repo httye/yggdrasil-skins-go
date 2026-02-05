@@ -12,8 +12,7 @@ import (
 	"fmt"
 )
 
-// SignData 使用RSA私钥签名数据（SHA1withRSA算法）
-func SignData(data string, privateKeyPEM string) (string, error) {
+// SignData 使用RSA私钥签名数据（SHA1withRSA算法�?func SignData(data string, privateKeyPEM string) (string, error) {
 	// 解析私钥
 	privateKey, err := ParsePrivateKey(privateKeyPEM)
 	if err != nil {
@@ -33,8 +32,7 @@ func SignData(data string, privateKeyPEM string) (string, error) {
 	return base64.StdEncoding.EncodeToString(signature), nil
 }
 
-// SignDataWithRSAKey 使用已解析的RSA私钥签名数据（高性能版本）
-func SignDataWithRSAKey(data string, privateKey *rsa.PrivateKey) (string, error) {
+// SignDataWithRSAKey 使用已解析的RSA私钥签名数据（高性能版本�?func SignDataWithRSAKey(data string, privateKey *rsa.PrivateKey) (string, error) {
 	// 使用SHA1哈希
 	hash := sha1.Sum([]byte(data))
 

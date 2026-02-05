@@ -1,5 +1,4 @@
-// Package file Laravel缓存兼容性实现
-package file
+// Package file Laravel缓存兼容性实�?package file
 
 import (
 	"crypto/md5"
@@ -23,33 +22,27 @@ type LaravelFileCache struct {
 	cacheDir string
 }
 
-// NewLaravelFileCache 创建Laravel兼容的文件缓存
-func NewLaravelFileCache(cacheDir string) *LaravelFileCache {
+// NewLaravelFileCache 创建Laravel兼容的文件缓�?func NewLaravelFileCache(cacheDir string) *LaravelFileCache {
 	return &LaravelFileCache{
 		cacheDir: cacheDir,
 	}
 }
 
-// GetCacheFilePath 获取缓存文件路径（Laravel兼容）
-func (c *LaravelFileCache) GetCacheFilePath(key string) string {
-	// Laravel使用MD5哈希作为文件名
-	hash := md5.Sum([]byte(key))
+// GetCacheFilePath 获取缓存文件路径（Laravel兼容�?func (c *LaravelFileCache) GetCacheFilePath(key string) string {
+	// Laravel使用MD5哈希作为文件�?	hash := md5.Sum([]byte(key))
 	hashStr := hex.EncodeToString(hash[:])
 
 	// Laravel的文件缓存路径格式：cache/data/{hash[0:2]}/{hash[2:4]}/{hash}
 	return filepath.Join(c.cacheDir, "data", hashStr[0:2], hashStr[2:4], hashStr)
 }
 
-// Store 存储数据到Laravel兼容的缓存文件
-func (c *LaravelFileCache) Store(key string, data interface{}, ttl time.Duration) error {
-	// 使用PHP序列化库序列化数据
-	serializedData, err := phpserialize.Marshal(data)
+// Store 存储数据到Laravel兼容的缓存文�?func (c *LaravelFileCache) Store(key string, data interface{}, ttl time.Duration) error {
+	// 使用PHP序列化库序列化数�?	serializedData, err := phpserialize.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("failed to serialize data: %w", err)
 	}
 
-	// 创建Laravel格式的缓存内容
-	// 格式：{php_serialized_data}i:{expiration_timestamp};
+	// 创建Laravel格式的缓存内�?	// 格式：{php_serialized_data}i:{expiration_timestamp};
 	expiresAt := time.Now().Add(ttl).Unix()
 	cacheContent := fmt.Sprintf("%si:%d;", string(serializedData), expiresAt)
 
@@ -69,8 +62,7 @@ func (c *LaravelFileCache) Store(key string, data interface{}, ttl time.Duration
 	return nil
 }
 
-// Get 从Laravel兼容的缓存文件获取数据
-func (c *LaravelFileCache) Get(key string, target interface{}) error {
+// Get 从Laravel兼容的缓存文件获取数�?func (c *LaravelFileCache) Get(key string, target interface{}) error {
 	filePath := c.GetCacheFilePath(key)
 
 	// 读取文件
@@ -89,8 +81,7 @@ func (c *LaravelFileCache) Get(key string, target interface{}) error {
 		return fmt.Errorf("failed to parse Laravel cache: %w", err)
 	}
 
-	// 检查是否过期
-	if time.Now().Unix() > expiresAt {
+	// 检查是否过�?	if time.Now().Unix() > expiresAt {
 		// 删除过期文件
 		os.Remove(filePath)
 		return fmt.Errorf("cache expired")
@@ -104,8 +95,7 @@ func (c *LaravelFileCache) Get(key string, target interface{}) error {
 	return nil
 }
 
-// Delete 删除Laravel兼容的缓存文件
-func (c *LaravelFileCache) Delete(key string) error {
+// Delete 删除Laravel兼容的缓存文�?func (c *LaravelFileCache) Delete(key string) error {
 	filePath := c.GetCacheFilePath(key)
 	err := os.Remove(filePath)
 	if err != nil && !os.IsNotExist(err) {
@@ -114,12 +104,10 @@ func (c *LaravelFileCache) Delete(key string) error {
 	return nil
 }
 
-// CleanupExpired 清理过期的缓存文件
-func (c *LaravelFileCache) CleanupExpired() error {
+// CleanupExpired 清理过期的缓存文�?func (c *LaravelFileCache) CleanupExpired() error {
 	return filepath.Walk(c.cacheDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			return nil // 忽略错误，继续处理
-		}
+			return nil // 忽略错误，继续处�?		}
 
 		// 跳过目录
 		if info.IsDir() {
@@ -139,8 +127,7 @@ func (c *LaravelFileCache) CleanupExpired() error {
 			return nil // 忽略解析错误
 		}
 
-		// 检查是否过期
-		if time.Now().Unix() > expiresAt {
+		// 检查是否过�?		if time.Now().Unix() > expiresAt {
 			os.Remove(path) // 删除过期文件
 		}
 
@@ -148,25 +135,22 @@ func (c *LaravelFileCache) CleanupExpired() error {
 	})
 }
 
-// generateYggdrasilTokenKey 生成Yggdrasil Token缓存键（与BlessingSkin兼容）
-func generateYggdrasilTokenKey(accessToken string) string {
+// generateYggdrasilTokenKey 生成Yggdrasil Token缓存键（与BlessingSkin兼容�?func generateYggdrasilTokenKey(accessToken string) string {
 	return fmt.Sprintf("yggdrasil-token-%s", accessToken)
 }
 
-// generateYggdrasilUserTokensKey 生成用户Token列表缓存键（与BlessingSkin兼容）
-func generateYggdrasilUserTokensKey(userEmail string) string {
+// generateYggdrasilUserTokensKey 生成用户Token列表缓存键（与BlessingSkin兼容�?func generateYggdrasilUserTokensKey(userEmail string) string {
 	return fmt.Sprintf("yggdrasil-id-%s", userEmail)
 }
 
-// generateYggdrasilSessionKey 生成Session缓存键（与BlessingSkin兼容）
-func generateYggdrasilSessionKey(serverID string) string {
+// generateYggdrasilSessionKey 生成Session缓存键（与BlessingSkin兼容�?func generateYggdrasilSessionKey(serverID string) string {
 	return fmt.Sprintf("yggdrasil-server-%s", serverID)
 }
 
 // ParseLaravelCache 解析Laravel缓存格式
 func (c *LaravelFileCache) ParseLaravelCache(content string) (string, int64, error) {
 	// Laravel缓存格式：{php_serialized_data}i:{expiration_timestamp};
-	// 例如：s:10:"test_value"i:1744686812; 或者 i:9999999999;i:1744686812;
+	// 例如：s:10:"test_value"i:1744686812; 或�?i:9999999999;i:1744686812;
 
 	// 查找最后的 i: 位置
 	lastI := strings.LastIndex(content, "i:")
@@ -186,10 +170,9 @@ func (c *LaravelFileCache) ParseLaravelCache(content string) (string, int64, err
 		return "", 0, fmt.Errorf("invalid expiration timestamp: %w", err)
 	}
 
-	// 提取PHP序列化数据
-	serializedData := content[:lastI]
+	// 提取PHP序列化数�?	serializedData := content[:lastI]
 
 	return serializedData, expiresAt, nil
 }
 
-// 注意：手动PHP序列化方法已移除，现在使用 github.com/trim21/go-phpserialize 库
+// 注意：手动PHP序列化方法已移除，现在使�?github.com/trim21/go-phpserialize �?

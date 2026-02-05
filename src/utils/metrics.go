@@ -12,21 +12,14 @@ import (
 type PerformanceMetrics struct {
 	// 请求统计
 	RequestCount int64 // 总请求数
-	ErrorCount   int64 // 错误请求数
-
+	ErrorCount   int64 // 错误请求�?
 	// 响应时间统计
-	TotalResponseTime int64 // 总响应时间（纳秒）
-	MaxResponseTime   int64 // 最大响应时间（纳秒）
-	MinResponseTime   int64 // 最小响应时间（纳秒）
-
-	// 数据库统计
-	DBQueryCount int64 // 数据库查询次数
-	TotalDBTime  int64 // 总数据库时间（纳秒）
+	TotalResponseTime int64 // 总响应时间（纳秒�?	MaxResponseTime   int64 // 最大响应时间（纳秒�?	MinResponseTime   int64 // 最小响应时间（纳秒�?
+	// 数据库统�?	DBQueryCount int64 // 数据库查询次�?	TotalDBTime  int64 // 总数据库时间（纳秒）
 
 	// 缓存统计
 	CacheHits   int64 // 缓存命中次数
-	CacheMisses int64 // 缓存未命中次数
-
+	CacheMisses int64 // 缓存未命中次�?
 	// 启动时间
 	StartTime time.Time
 }
@@ -34,8 +27,7 @@ type PerformanceMetrics struct {
 // 全局性能指标实例
 var GlobalMetrics = &PerformanceMetrics{
 	StartTime:       time.Now(),
-	MinResponseTime: int64(^uint64(0) >> 1), // 初始化为最大值
-}
+	MinResponseTime: int64(^uint64(0) >> 1), // 初始化为最大�?}
 
 // RecordRequest 记录请求
 func (m *PerformanceMetrics) RecordRequest(duration time.Duration, isError bool) {
@@ -49,8 +41,7 @@ func (m *PerformanceMetrics) RecordRequest(duration time.Duration, isError bool)
 	durationNanos := duration.Nanoseconds()
 	atomic.AddInt64(&m.TotalResponseTime, durationNanos)
 
-	// 更新最大响应时间
-	for {
+	// 更新最大响应时�?	for {
 		current := atomic.LoadInt64(&m.MaxResponseTime)
 		if durationNanos <= current {
 			break
@@ -60,8 +51,7 @@ func (m *PerformanceMetrics) RecordRequest(duration time.Duration, isError bool)
 		}
 	}
 
-	// 更新最小响应时间
-	for {
+	// 更新最小响应时�?	for {
 		current := atomic.LoadInt64(&m.MinResponseTime)
 		if durationNanos >= current {
 			break
@@ -72,8 +62,7 @@ func (m *PerformanceMetrics) RecordRequest(duration time.Duration, isError bool)
 	}
 }
 
-// RecordDBQuery 记录数据库查询
-func (m *PerformanceMetrics) RecordDBQuery(duration time.Duration) {
+// RecordDBQuery 记录数据库查�?func (m *PerformanceMetrics) RecordDBQuery(duration time.Duration) {
 	atomic.AddInt64(&m.DBQueryCount, 1)
 	atomic.AddInt64(&m.TotalDBTime, duration.Nanoseconds())
 }
@@ -83,8 +72,7 @@ func (m *PerformanceMetrics) RecordCacheHit() {
 	atomic.AddInt64(&m.CacheHits, 1)
 }
 
-// RecordCacheMiss 记录缓存未命中
-func (m *PerformanceMetrics) RecordCacheMiss() {
+// RecordCacheMiss 记录缓存未命�?func (m *PerformanceMetrics) RecordCacheMiss() {
 	atomic.AddInt64(&m.CacheMisses, 1)
 }
 
@@ -100,18 +88,15 @@ func (m *PerformanceMetrics) GetStats() map[string]interface{} {
 	cacheHits := atomic.LoadInt64(&m.CacheHits)
 	cacheMisses := atomic.LoadInt64(&m.CacheMisses)
 
-	// 计算平均值
-	var avgResponseTime float64
+	// 计算平均�?	var avgResponseTime float64
 	var avgDBTime float64
 	var cacheHitRate float64
 
 	if requestCount > 0 {
-		avgResponseTime = float64(totalResponseTime) / float64(requestCount) / 1e6 // 转换为毫秒
-	}
+		avgResponseTime = float64(totalResponseTime) / float64(requestCount) / 1e6 // 转换为毫�?	}
 
 	if dbQueryCount > 0 {
-		avgDBTime = float64(totalDBTime) / float64(dbQueryCount) / 1e6 // 转换为毫秒
-	}
+		avgDBTime = float64(totalDBTime) / float64(dbQueryCount) / 1e6 // 转换为毫�?	}
 
 	totalCacheRequests := cacheHits + cacheMisses
 	if totalCacheRequests > 0 {
@@ -158,8 +143,7 @@ func (m *PerformanceMetrics) ResetStats() {
 	m.StartTime = time.Now()
 }
 
-// GetQPS 获取每秒请求数
-func (m *PerformanceMetrics) GetQPS() float64 {
+// GetQPS 获取每秒请求�?func (m *PerformanceMetrics) GetQPS() float64 {
 	uptime := time.Since(m.StartTime).Seconds()
 	if uptime <= 0 {
 		return 0
@@ -167,8 +151,7 @@ func (m *PerformanceMetrics) GetQPS() float64 {
 	return float64(atomic.LoadInt64(&m.RequestCount)) / uptime
 }
 
-// GetCacheHitRate 获取缓存命中率
-func (m *PerformanceMetrics) GetCacheHitRate() float64 {
+// GetCacheHitRate 获取缓存命中�?func (m *PerformanceMetrics) GetCacheHitRate() float64 {
 	hits := atomic.LoadInt64(&m.CacheHits)
 	misses := atomic.LoadInt64(&m.CacheMisses)
 	total := hits + misses
@@ -188,19 +171,16 @@ func (m *PerformanceMetrics) GetAvgResponseTime() float64 {
 	}
 
 	totalTime := atomic.LoadInt64(&m.TotalResponseTime)
-	return float64(totalTime) / float64(requestCount) / 1e6 // 转换为毫秒
-}
+	return float64(totalTime) / float64(requestCount) / 1e6 // 转换为毫�?}
 
-// GetAvgDBTime 获取平均数据库查询时间（毫秒）
-func (m *PerformanceMetrics) GetAvgDBTime() float64 {
+// GetAvgDBTime 获取平均数据库查询时间（毫秒�?func (m *PerformanceMetrics) GetAvgDBTime() float64 {
 	queryCount := atomic.LoadInt64(&m.DBQueryCount)
 	if queryCount == 0 {
 		return 0
 	}
 
 	totalTime := atomic.LoadInt64(&m.TotalDBTime)
-	return float64(totalTime) / float64(queryCount) / 1e6 // 转换为毫秒
-}
+	return float64(totalTime) / float64(queryCount) / 1e6 // 转换为毫�?}
 
 // PrintStats 打印统计信息
 func (m *PerformanceMetrics) PrintStats() {

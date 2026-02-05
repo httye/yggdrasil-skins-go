@@ -4,21 +4,19 @@ import (
 	"fmt"
 	"strconv"
 
-	"yggdrasil-api-go/src/config"
-	storage "yggdrasil-api-go/src/storage/interface"
-	"yggdrasil-api-go/src/utils"
+	"github.com/httye/yggdrasil-skins-go/src/config"
+	storage "github.com/httye/yggdrasil-skins-go/src/storage/interface"
+	"github.com/httye/yggdrasil-skins-go/src/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
-// ProfileHandler 角色处理器
-type ProfileHandler struct {
+// ProfileHandler 角色处理�?type ProfileHandler struct {
 	storage storage.Storage
 	config  *config.Config
 }
 
-// NewProfileHandler 创建新的角色处理器
-func NewProfileHandler(storage storage.Storage, cfg *config.Config) *ProfileHandler {
+// NewProfileHandler 创建新的角色处理�?func NewProfileHandler(storage storage.Storage, cfg *config.Config) *ProfileHandler {
 	return &ProfileHandler{
 		storage: storage,
 		config:  cfg,
@@ -33,8 +31,7 @@ func (h *ProfileHandler) GetProfileByUUID(c *gin.Context) {
 		return
 	}
 
-	// 获取unsigned参数，默认为true（不包含签名）
-	unsigned := true
+	// 获取unsigned参数，默认为true（不包含签名�?	unsigned := true
 	if unsignedParam := c.Query("unsigned"); unsignedParam != "" {
 		if parsed, err := strconv.ParseBool(unsignedParam); err == nil {
 			unsigned = parsed
@@ -51,20 +48,16 @@ func (h *ProfileHandler) GetProfileByUUID(c *gin.Context) {
 
 	// 处理签名逻辑
 	if unsigned {
-		// 如果unsigned为true，移除签名信息
-		for i := range profile.Properties {
+		// 如果unsigned为true，移除签名信�?		for i := range profile.Properties {
 			profile.Properties[i].Signature = ""
 		}
 	} else {
-		// 如果unsigned为false，检查是否需要生成签名
-		for i := range profile.Properties {
+		// 如果unsigned为false，检查是否需要生成签�?		for i := range profile.Properties {
 			if profile.Properties[i].Signature == "" {
 				// 生成签名
 				signature, err := h.generateSignature(profile.Properties[i].Value)
 				if err != nil {
-					// 签名生成失败，记录错误但不影响响应
-					// 可以选择返回错误或继续返回无签名的数据
-					continue
+					// 签名生成失败，记录错误但不影响响�?					// 可以选择返回错误或继续返回无签名的数�?					continue
 				}
 				profile.Properties[i].Signature = signature
 			}
@@ -74,47 +67,39 @@ func (h *ProfileHandler) GetProfileByUUID(c *gin.Context) {
 	utils.RespondJSONFast(c, profile)
 }
 
-// generateSignature 生成属性值的数字签名（高性能版本）
-func (h *ProfileHandler) generateSignature(value string) (string, error) {
-	// 尝试获取缓存的RSA密钥对
-	rsaPrivateKey, _, err := GetCachedRSAKeyPair()
+// generateSignature 生成属性值的数字签名（高性能版本�?func (h *ProfileHandler) generateSignature(value string) (string, error) {
+	// 尝试获取缓存的RSA密钥�?	rsaPrivateKey, _, err := GetCachedRSAKeyPair()
 	if err != nil {
-		// 如果缓存未命中，回退到传统方式
-		privateKey, _, err := h.loadSignatureKeyPair()
+		// 如果缓存未命中，回退到传统方�?		privateKey, _, err := h.loadSignatureKeyPair()
 		if err != nil {
 			return "", fmt.Errorf("failed to load signature key pair: %w", err)
 		}
 		return utils.SignData(value, privateKey)
 	}
 
-	// 使用高性能签名函数（直接使用解析好的RSA密钥）
-	return utils.SignDataWithRSAKey(value, rsaPrivateKey)
+	// 使用高性能签名函数（直接使用解析好的RSA密钥�?	return utils.SignDataWithRSAKey(value, rsaPrivateKey)
 }
 
-// loadSignatureKeyPair 加载签名密钥对
-func (h *ProfileHandler) loadSignatureKeyPair() (privateKey string, publicKey string, err error) {
+// loadSignatureKeyPair 加载签名密钥�?func (h *ProfileHandler) loadSignatureKeyPair() (privateKey string, publicKey string, err error) {
 	// 对于blessingskin存储，从options表读取密钥对
 	if h.storage.GetStorageType() == "blessing_skin" {
 		return h.storage.GetSignatureKeyPair()
 	}
 
-	// 对于其他存储类型，从配置文件读取密钥对
-	return utils.LoadOrGenerateKeyPair(
+	// 对于其他存储类型，从配置文件读取密钥�?	return utils.LoadOrGenerateKeyPair(
 		h.config.Yggdrasil.Keys.PrivateKeyPath,
 		h.config.Yggdrasil.Keys.PublicKeyPath,
 	)
 }
 
-// SearchMultipleProfiles 按名称批量查询角色
-func (h *ProfileHandler) SearchMultipleProfiles(c *gin.Context) {
+// SearchMultipleProfiles 按名称批量查询角�?func (h *ProfileHandler) SearchMultipleProfiles(c *gin.Context) {
 	var names []string
 	if err := c.ShouldBindJSON(&names); err != nil {
 		utils.RespondIllegalArgument(c, "Invalid request format")
 		return
 	}
 
-	// 限制查询数量（防止CC攻击）
-	maxProfiles := 10
+	// 限制查询数量（防止CC攻击�?	maxProfiles := 10
 	if len(names) > maxProfiles {
 		utils.RespondForbiddenOperation(c, "Too many profiles requested")
 		return
@@ -140,8 +125,7 @@ func (h *ProfileHandler) SearchMultipleProfiles(c *gin.Context) {
 	utils.RespondJSONFast(c, result)
 }
 
-// SearchSingleProfile 根据用户名查询单个角色
-func (h *ProfileHandler) SearchSingleProfile(c *gin.Context) {
+// SearchSingleProfile 根据用户名查询单个角�?func (h *ProfileHandler) SearchSingleProfile(c *gin.Context) {
 	username := c.Param("username")
 	if username == "" {
 		utils.RespondIllegalArgument(c, "Missing username parameter")
